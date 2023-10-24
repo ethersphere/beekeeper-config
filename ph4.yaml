@@ -18,12 +18,7 @@ clusters:
         mode: node
         bee-config: ph4
         config: ph4
-        count: 20
-      gateway-bee:
-        mode: node
-        bee-config: ph4
-        config: ph4
-        count: 2
+        count: 21
 
 node-groups:
   ph4:
@@ -46,7 +41,6 @@ checks:
       max-use-batch: 1h
       upload-groups:
         - full-bee
-        - gateway-bee
     timeout: 12h
     type: load
   smoke-ph4:
