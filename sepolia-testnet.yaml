@@ -1,0 +1,54 @@
+clusters:
+  sepolia-testnet:
+    _inherit: ""
+    name: bee
+    namespace: sepolia-testnet
+    disable-namespace: false
+    api-domain: testnet.internal
+    api-scheme: http
+    debug-api-domain: testnet.internal
+    debug-api-scheme: http
+    node-groups:
+      bootnode-bee:
+        mode: bootnode
+        bee-config: sepolia-testnet
+        config: sepolia-testnet
+        count: 1
+      full-bee:
+        mode: node
+        bee-config: sepolia-testnet
+        config: sepolia-testnet
+        count: 21
+
+node-groups:
+  sepolia-testnet:
+    _inherit: "default"
+
+bee-configs:
+  sepolia-testnet:
+    _inherit: "default"
+
+checks:
+  load-sepolia-testnet:
+    options:
+      content-size: 50000000
+      postage-amount: 500000001
+      postage-depth: 24
+      nodes-sync-wait: 30s
+      duration: 12h
+      uploader-count: 3
+      downloader-count: 0
+      max-use-batch: 1h
+      upload-groups:
+        - full-bee
+    timeout: 12h
+    type: load
+  smoke-sepolia-testnet:
+    options:
+      content-size: 5000000
+      postage-amount: 1000000
+      postage-depth: 20
+      nodes-sync-wait: 1m
+      duration: 12h
+    timeout: 720h
+    type: smoke
