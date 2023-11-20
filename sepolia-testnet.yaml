@@ -52,5 +52,3 @@ checks:
       duration: 12h
     timeout: 720h
     type: smoke
-    timeout: 720h
-    type: smoke
