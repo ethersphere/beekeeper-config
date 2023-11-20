@@ -46,9 +46,11 @@ checks:
   smoke-sepolia-testnet:
     options:
       content-size: 5000000
-      postage-amount: 1000000
-      postage-depth: 20
+      postage-amount: 100000000
+      postage-depth: 24
       nodes-sync-wait: 1m
       duration: 12h
+    timeout: 720h
+    type: smoke
     timeout: 720h
     type: smoke
