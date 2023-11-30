@@ -61,3 +61,7 @@ checks:
       concurrency: 20
     timeout: 720h
     type: datadurability
+  dev-net-availability:
+    options:
+    timeout: 720h
+    type: networkavailability
