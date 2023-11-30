@@ -62,6 +62,5 @@ checks:
     timeout: 720h
     type: datadurability
   dev-net-availability:
-    options:
     timeout: 720h
     type: networkavailability
