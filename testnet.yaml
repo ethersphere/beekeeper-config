@@ -38,7 +38,7 @@ checks:
   testnet-load:
     options:
       content-size: 50000000
-      postage-amount: 41287680 # 1024/15*60*60*24*7
+      postage-amount: 1000000000 # 1024/15*60*60*24*7
       postage-depth: 24
       duration: 12h
       uploader-count: 2
