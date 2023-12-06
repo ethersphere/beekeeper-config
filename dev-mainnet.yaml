@@ -58,5 +58,6 @@ checks:
   dev-durability:
     options:
       ref: 16c1437d310202ccea278cf1ea98cbd7f2830929d9e41b2a8fc9a1df74fa0d3f
+      concurrency: 20
     timeout: 720h
     type: datadurability
