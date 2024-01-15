@@ -57,3 +57,10 @@ checks:
       postage-depth: 24
     timeout: 720h
     type: smoke
+  testnet-erasure-code:
+    options:
+      content-size: 5000000
+      postage-amount: 1000000000 # 1024/15*60*60*24*7
+      postage-depth: 24
+    timeout: 720h
+    type: erasure-code
