@@ -13,12 +13,12 @@ clusters:
         mode: bootnode
         bee-config: sepolia-testnet
         config: sepolia-testnet
-        count: 1
+        count: 2
       full-bee:
         mode: node
         bee-config: sepolia-testnet
         config: sepolia-testnet
-        count: 21
+        count: 14
 
 node-groups:
   sepolia-testnet:
