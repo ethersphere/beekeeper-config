@@ -11,7 +11,7 @@ clusters:
     node-groups:
       gateway-bee:
         mode: node
-        bee-config: sepollia-testnet
+        bee-config: sepolia-testnet
         config: sepolia-testnet
         count: 2
 
