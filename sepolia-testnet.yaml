@@ -9,16 +9,11 @@ clusters:
     debug-api-domain: testnet.internal
     debug-api-scheme: http
     node-groups:
-      bootnode-bee:
-        mode: bootnode
-        bee-config: sepolia-testnet
-        config: sepolia-testnet
-        count: 2
-      full-bee:
+      gateway-bee:
         mode: node
-        bee-config: sepolia-testnet
-        config: sepolia-testnet
-        count: 15
+        bee-config: sepollia-testnet
+        config: sepolia-config
+        count: 2
 
 node-groups:
   sepolia-testnet:
@@ -40,7 +35,7 @@ checks:
       downloader-count: 0
       max-use-batch: 1h
       upload-groups:
-        - full-bee
+        - gateway-bee
     timeout: 13h
     type: load
   smoke-sepolia-testnet:
