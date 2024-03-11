@@ -182,6 +182,7 @@ bee-configs:
     staking-address: "0xc0332d319b73cfeed89511fe1a83add141bd6f12"
     redistribution-address: "0x56e442f99cafd7c890c404c1f8c16d38a569e41a"
     price-oracle-address: "0xfc28330f1ece0ef2371b724e0d19c1ee60b728b2"
+    withdraw-address: "0xfc28330f1ece0ef2371b724e0d19c1ee60b728b2"
     resolver-options: ""
     restricted: false
     token-encryption-key: ""
