@@ -40,7 +40,8 @@ checks:
       downloader-count: 0
       max-use-batch: 1h
       upload-groups:
-        - gateway-bee
+        - bee-old
+        - bee-upgraded
     timeout: 13h
     type: load
   smoke-redistribution-contract-test:
