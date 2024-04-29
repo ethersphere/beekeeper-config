@@ -13,12 +13,12 @@ clusters:
         mode: node
         bee-config: redistribution-contract-test
         config: redistribution-contract-test
-        count: 3
+        count: 5
       bee-upgraded:
         mode: node
         bee-config: redistribution-contract-test
         config: redistribution-contract-test
-        count: 3
+        count: 5
 
 node-groups:
   redistribution-contract-test:
