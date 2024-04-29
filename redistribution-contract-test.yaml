@@ -1,0 +1,55 @@
+clusters:
+  redistribution-contract-test:
+    _inherit: ""
+    name: bee
+    namespace: redistribution-contract-test
+    disable-namespace: false
+    api-domain: testnet.internal
+    api-scheme: http
+    debug-api-domain: testnet.internal
+    debug-api-scheme: http
+    node-groups:
+      bee-old:
+        mode: node
+        bee-config: redistribution-contract-test
+        config: redistribution-contract-test
+        count: 3
+      bee-upgraded:
+        mode: node
+        bee-config: redistribution-contract-test
+        config: redistribution-contract-test
+        count: 3
+
+node-groups:
+  redistribution-contract-test:
+    _inherit: "default"
+
+bee-configs:
+  redistribution-contract-test:
+    _inherit: "default"
+
+checks:
+  load-redistribution-contract-test:
+    options:
+      content-size: 50000000
+      postage-amount: 5000000001
+      postage-depth: 24
+      nodes-sync-wait: 30s
+      duration: 12h
+      uploader-count: 1
+      downloader-count: 0
+      max-use-batch: 1h
+      upload-groups:
+        - gateway-bee
+    timeout: 13h
+    type: load
+  smoke-redistribution-contract-test:
+    options:
+      content-size: 50000000
+      postage-amount: 5000000001
+      postage-depth: 24
+      nodes-sync-wait: 1m
+      duration: 12h
+    timeout: 720h
+    type: smoke
+  
