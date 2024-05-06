@@ -9,16 +9,56 @@ clusters:
     debug-api-domain: testnet.internal
     debug-api-scheme: http
     node-groups:
-      bee-old:
+      bee-0:
         mode: node
         bee-config: redistribution-contract-test
         config: redistribution-contract-test
-        count: 5
-      bee-upgraded:
+        count: 1
+      bee-1:
         mode: node
         bee-config: redistribution-contract-test
         config: redistribution-contract-test
-        count: 5
+        count: 1
+      bee-2:
+        mode: node
+        bee-config: redistribution-contract-test
+        config: redistribution-contract-test
+        count: 1
+      bee-3:
+        mode: node
+        bee-config: redistribution-contract-test
+        config: redistribution-contract-test
+        count: 1
+      bee-4:
+        mode: node
+        bee-config: redistribution-contract-test
+        config: redistribution-contract-test
+        count: 1
+      bee-5:
+        mode: node
+        bee-config: redistribution-contract-test
+        config: redistribution-contract-test
+        count: 1
+      bee-6:
+        mode: node
+        bee-config: redistribution-contract-test
+        config: redistribution-contract-test
+        count: 1
+      bee-7:
+        mode: node
+        bee-config: redistribution-contract-test
+        config: redistribution-contract-test
+        count: 1
+      bee-8:
+        mode: node
+        bee-config: redistribution-contract-test
+        config: redistribution-contract-test
+        count: 1
+      bee-9:
+        mode: node
+        bee-config: redistribution-contract-test
+        config: redistribution-contract-test
+        count: 1
 
 node-groups:
   redistribution-contract-test:
@@ -40,8 +80,16 @@ checks:
       downloader-count: 0
       max-use-batch: 1h
       upload-groups:
-        - bee-old
-        - bee-upgraded
+        - bee-0
+        - bee-1
+        - bee-2
+        - bee-3
+        - bee-4
+        - bee-5
+        - bee-6
+        - bee-7
+        - bee-8
+        - bee-9
     timeout: 13h
     type: load
   smoke-redistribution-contract-test:
