@@ -2,7 +2,7 @@ clusters:
   redistribution-contract-test:
     _inherit: ""
     name: bee
-    namespace: redistribution-contract-test
+    namespace: swip20
     disable-namespace: false
     api-domain: testnet.internal
     api-scheme: http
