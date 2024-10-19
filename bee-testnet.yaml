@@ -6,12 +6,9 @@ clusters:
     name: bee
     namespace: bee-testnet
     disable-namespace: true
-    api-domain: bee.testnet.ethswarm.org
+    api-domain: bee-testnet.testnet.internal:1633
     api-insecure-tls: true
-    api-scheme: https
-    #debug-api-domain: svc.swarm1.local
-    #debug-api-insecure-tls: true
-    #debug-api-scheme: https
+    api-scheme: http
     funding:
       eth: 0.1
       gbzz: 2.0
