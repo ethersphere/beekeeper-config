@@ -1,0 +1,82 @@
+in-cluster: true
+
+clusters:
+  bee-light-testnet:
+    _inherit: ""
+    name: bee
+    namespace: bee-light-testnet
+    disable-namespace: true
+    api-domain: lightnet.testnet.internal:1633
+    api-insecure-tls: true
+    api-scheme: http
+    funding:
+      eth: 0.1
+      gbzz: 2.0
+    node-groups:
+      bee-1:
+        mode: node
+        bee-config: sepolia
+        config: ng-bee-light-testnet
+        count: 5
+      bee-2:
+        mode: node
+        bee-config: sepolia
+        config: ng-bee-light-testnet
+        count: 5
+      bee-3:
+        mode: node
+        bee-config: sepolia
+        config: ng-bee-light-testnet
+        count: 5
+      bee-4:
+        mode: node
+        bee-config: sepolia
+        config: ng-bee-light-testnet
+        count: 5
+
+# node-groups defines node groups that can be registered in the cluster
+# node-groups may inherit it's configuration from already defined node-group and override specific fields from it
+node-groups:
+  ng-bee-light-testnet:
+    _inherit: ""
+#    persistence-enabled: true
+
+# bee-configs defines Bee configuration that can be assigned to node-groups
+# bee-configs may inherit it's configuration from already defined bee-config and override specific fields from it
+bee-configs:
+  sepolia:
+    _inherit: ""
+    #bootnodes: "/dnsaddr/testnet.ethswarm.org"
+ 
+checks:
+  testnet-load:
+    options:
+      content-size: 50000000
+      postage-amount: 1000000000 # 1024/15*60*60*24*7
+      postage-depth: 24
+      duration: 12h
+      uploader-count: 2
+      downloader-count: 0
+      max-use-batch: 1h
+      upload-groups:
+        - bee-1
+        - bee-2
+      download-groups:
+        - bee-3
+        - bee-4
+    timeout: 12h
+    type: load
+  testnet-smoke:
+    options:
+      content-size: 5000000
+      postage-amount: 1000000000 # 1024/15*60*60*24*7
+      postage-depth: 24
+    timeout: 720h
+    type: smoke
+  testnet-erasure-code:
+    options:
+      content-size: 5000000
+      postage-amount: 1000000000 # 1024/15*60*60*24*7
+      postage-depth: 24
+    timeout: 720h
+    type: erasure-code
