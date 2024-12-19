@@ -13,22 +13,11 @@ clusters:
       eth: 0.1
       gbzz: 2.0
     node-groups:
-      bee-0:
+      bee-:
         mode: node
         bee-config: sepolia
         config: ng-bee-playground
-        count: 1
-      bee-1:
-        mode: node
-        bee-config: sepolia
-        config: ng-bee-playground
-        count: 1
-      bee-2:
-        mode: node
-        bee-config: sepolia
-        config: ng-bee-playground
-        count: 1
-
+        count: 3
 # node-groups defines node groups that can be registered in the cluster
 # node-groups may inherit it's configuration from already defined node-group and override specific fields from it
 node-groups:
@@ -54,11 +43,9 @@ checks:
       downloader-count: 0
       max-use-batch: 1h
       upload-groups:
-        - bee-1
-        - bee-2
+        - bee-
       download-groups:
-        - bee-3
-        - bee-4
+        - bee-
     timeout: 12h
     type: load
   playground-smoke:
