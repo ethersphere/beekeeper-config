@@ -6,6 +6,7 @@ clusters:
     namespace: bee-playground
     disable-namespace: true
     api-domain: bee-testnet.testnet.internal:1633
+    api-domain-internal: bee-playground.svc.swarm1.local:1633
     api-insecure-tls: true
     api-scheme: http
     funding:
