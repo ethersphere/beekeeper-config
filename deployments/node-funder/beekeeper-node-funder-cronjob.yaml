@@ -4,10 +4,8 @@ image:
   pullPolicy: Always
 
 imagePullSecrets: []
-additionalPodLabels:
-  log-collect: "true"
-nameOverride: "beekeeper-checks"
-fullnameOverride: "beekeeper-checks"
+nameOverride: "beekeeper-node-funder"
+fullnameOverride: "beekeeper-node-funder"
 
 serviceAccount:
   ## Specifies whether a service account should be created
@@ -36,18 +34,20 @@ config:
   command:
     [
       "beekeeper",
-      "check",
+      "node-funder",
       "--in-cluster=true",
       "--cluster-name=bee-testnet",
-      "--checks=pt-pingpong,pt-pushsync-chunks,pt-manifest,pt-feed,pt-gsoc,pt-pss,pt-redundancy,pt-retrieval,pt-soc",
-      "--timeout=12h",
+      "--periodic-check=12h",
+      "--timeout=0",
+      "--geth-url=http://rpc-sepolia-haproxy.default.svc.swarm1.local",
+      "--min-swarm=10",
+      "--min-native=0.1",
+      "--wallet-key=bf3958828da231d26545b1ceb77a3534210a35b518ea399fb58429365620ce2c",
       "--log-verbosity=debug",
       "--config-git-repo=https://github.com/ethersphere/beekeeper",
       "--config-git-dir=config",
       "--config-git-branch=master",
-      "--metrics-enabled=true",
-      "--metrics-pusher-address=pushgateway-prometheus-pushgateway.monitoring.svc.swarm1.local:9091",
-      "--geth-url=http://rpc-sepolia-haproxy.default.svc.swarm1.local",
+      "--metrics-enabled=false",
     ]
   # environment variables
   BZZ_TOKEN_ADDRESS: "0x6aab14fe9cccd64a502d23842d916eb5321c26e7"
@@ -57,9 +57,9 @@ config:
   singleRun: false
   backoffLimit: 1
   # cron job
-  schedule: "30 */4 * * *" # every 4 hours at 30th minute
-  successfulJobsHistoryLimit: 2
-  failedJobsHistoryLimit: 5
+  schedule: "* * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
   concurrencyPolicy: Forbid
   # if it is enabled it will create init container that will wait
   # for cluster to be up and operational
