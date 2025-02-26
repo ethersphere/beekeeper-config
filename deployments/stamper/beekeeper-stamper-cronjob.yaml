@@ -59,7 +59,7 @@ config:
   singleRun: false
   backoffLimit: 1
   # cron job
-  schedule: "45 * * * *"
+  schedule: "10 */6 * * *"
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 3
   concurrencyPolicy: Forbid
