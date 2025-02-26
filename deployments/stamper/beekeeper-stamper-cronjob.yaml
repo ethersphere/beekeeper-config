@@ -42,7 +42,7 @@ config:
       "--ttl-threshold=120h",
       "--usage-threshold=90",
       "--dilution-depth=1",
-      "--periodic-check=2h",
+      "--periodic-check=6h",
       "--timeout=0",
       "--geth-url=http://rpc-sepolia-haproxy.default.svc.swarm1.local",
       "--log-verbosity=debug",
