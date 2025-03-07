@@ -42,7 +42,7 @@ config:
       "--geth-url=http://rpc-sepolia-haproxy.default.svc.swarm1.local",
       "--min-swarm=10",
       "--min-native=0.1",
-      "--wallet-key=bf3958828da231d26545b1ceb77a3534210a35b518ea399fb58429365620ce2c",
+      "--wallet-key=4663c222787e30c1994b59044aa5045377a6e79193a8ead88293926b535c722d",
       "--log-verbosity=debug",
       "--config-git-repo=https://github.com/ethersphere/beekeeper",
       "--config-git-dir=config",
