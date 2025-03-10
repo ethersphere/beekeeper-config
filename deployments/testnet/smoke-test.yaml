@@ -14,7 +14,7 @@ config:
   dirPath: 'files'
   api-domain-internal: 'bee-testnet.svc.{{ cluster_id }}.local:1633'
   # environment variables
-  CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
+  CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper.git'
   CONFIG_GIT_DIR: 'config'
   CONFIG_GIT_BRANCH: master
   GETH_URL: http://rpc-sepolia-haproxy.default.svc.{{ cluster_id }}.local
