@@ -1,5 +1,6 @@
 image:
   pullPolicy: IfNotPresent
+  tag: "{{ beekeeper_tag }}"
 
 serviceAccount:
   ## Specifies whether a service account should be created
