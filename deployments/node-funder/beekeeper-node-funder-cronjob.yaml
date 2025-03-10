@@ -1,0 +1,68 @@
+image:
+  repository: ethersphere/beekeeper
+  tag: latest
+  pullPolicy: Always
+
+imagePullSecrets: []
+nameOverride: "beekeeper-node-funder"
+fullnameOverride: "beekeeper-node-funder"
+
+serviceAccount:
+  ## Specifies whether a service account should be created
+  create: true
+  ## Name of the service account to use
+  ## if not set and create is true, a name is generated using the fullname template
+  name:
+  ## create role or/and cluster role for the service account
+  createRole: true
+  createClusterRole: true
+
+## Define resource requests and limits to allocate CPU and memory effectively.
+## Example:
+# resources:
+#   limits:
+#     cpu: "1"        # Maximum CPU usage (e.g., 1 core)
+#     memory: "1Gi"   # Maximum memory usage (e.g., 1 GiB)
+#   requests:
+#     cpu: "100m"     # Minimum guaranteed CPU usage (e.g., 100 millicores)
+#     memory: "128Mi" # Minimum guaranteed memory usage (e.g., 128 MiB)
+resources: {}
+
+nodeSelector: {}
+
+config:
+  command:
+    [
+      "beekeeper",
+      "node-funder",
+      "--in-cluster=true",
+      "--cluster-name=bee-testnet",
+      "--periodic-check=12h",
+      "--timeout=0",
+      "--geth-url=http://rpc-sepolia-haproxy.default.svc.swarm1.local",
+      "--min-swarm=10",
+      "--min-native=0.1",
+      "--wallet-key={{ beekeeper_eth_private_key }}",
+      "--log-verbosity=debug",
+      "--config-git-repo=https://github.com/ethersphere/beekeeper",
+      "--config-git-dir=config",
+      "--config-git-branch=master",
+      "--metrics-enabled=false",
+    ]
+  # environment variables
+  BZZ_TOKEN_ADDRESS: "0x6aab14fe9cccd64a502d23842d916eb5321c26e7"
+  ETH_ACCOUNT: "{{ beekeeper_eth_address }}"
+  # if singleRun is enabled cron job settings will be omitted
+  # job
+  singleRun: false
+  backoffLimit: 1
+  # cron job
+  schedule: "* * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
+  # if it is enabled it will create init container that will wait
+  # for cluster to be up and operational
+  initPing:
+    enabled: false
+    clusterName: ""
