@@ -42,7 +42,7 @@ config:
       "--geth-url=http://rpc-sepolia-haproxy.default.svc.swarm1.local",
       "--min-swarm=10",
       "--min-native=0.1",
-      "--wallet-key=4663c222787e30c1994b59044aa5045377a6e79193a8ead88293926b535c722d",
+      "--wallet-key={{ beekeeper_eth_private_key }}",
       "--log-verbosity=debug",
       "--config-git-repo=https://github.com/ethersphere/beekeeper",
       "--config-git-dir=config",
@@ -51,7 +51,7 @@ config:
     ]
   # environment variables
   BZZ_TOKEN_ADDRESS: "0x6aab14fe9cccd64a502d23842d916eb5321c26e7"
-  ETH_ACCOUNT: "0x62cab2b3b55f341f10348720ca18063cdb779ad5"
+  ETH_ACCOUNT: "{{ beekeeper_eth_address }}"
   # if singleRun is enabled cron job settings will be omitted
   # job
   singleRun: false
