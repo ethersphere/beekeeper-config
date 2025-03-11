@@ -17,7 +17,6 @@ resources:
 config:
   command: ['beekeeper', 'check', '--cluster-name=mainnet-sla', '--checks=sla-networkavailability', '--create-cluster=false', '--metrics-pusher-address=pushgateway-prometheus-pushgateway.monitoring.svc.{{ cluster_id }}.local:9091', '--timeout=720h', '--in-cluster=true']
   dirPath: 'files'
-  api-domain-internal: 'bee-sla.svc.{{ cluster_id }}.local:1633'
   # environment variables
   CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
   CONFIG_GIT_BRANCH: master
