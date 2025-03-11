@@ -14,6 +14,7 @@ config:
   dirPath: 'files'
   # environment variables
   CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
+  CONFIG_GIT_DIR: 'config'
   CONFIG_GIT_BRANCH: master
   GETH_URL: http://rpc-gnosis-haproxy.default.svc.{{ cluster_id }}.local
   # cron job
