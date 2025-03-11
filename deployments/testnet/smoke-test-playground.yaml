@@ -22,7 +22,6 @@ config:
       "--in-cluster=true",
     ]
   dirPath: "files"
-  api-domain-internal: "bee-playground.svc.{{ cluster_id }}.local:1633"
   # environment variables
   CONFIG_GIT_REPO: "https://github.com/ethersphere/beekeeper-config.git"
   CONFIG_GIT_DIR: "config"
