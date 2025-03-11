@@ -10,17 +10,24 @@ serviceAccount:
   createClusterRole: true
 
 config:
-  command: ['beekeeper', 'check', '--cluster-name=bee-playground', '--checks=playground-smoke', '--create-cluster=false', '--metrics-pusher-address=pushgateway-prometheus-pushgateway.monitoring.svc.{{ cluster_id }}.local:9091', '--timeout=13h', '--in-cluster=true']
-  dirPath: 'files'
-  api-domain-internal: 'bee-playground.svc.{{ cluster_id }}.local:1633'
+  command:
+    [
+      "beekeeper",
+      "check",
+      "--cluster-name=bee-playground",
+      "--checks=playground-smoke",
+      "--create-cluster=false",
+      "--metrics-pusher-address=pushgateway-prometheus-pushgateway.monitoring.svc.{{ cluster_id }}.local:9091",
+      "--timeout=13h",
+      "--in-cluster=true",
+    ]
+  dirPath: "files"
   # environment variables
-  CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
-  CONFIG_GIT_DIR: 'config'
+  CONFIG_GIT_REPO: "https://github.com/ethersphere/beekeeper-config.git"
+  CONFIG_GIT_DIR: "config"
   CONFIG_GIT_BRANCH: master
   GETH_URL: http://rpc-sepolia-haproxy.default.svc.{{ cluster_id }}.local
   # cron job
-  schedule: '* * * * *'
+  schedule: "* * * * *"
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
-
-

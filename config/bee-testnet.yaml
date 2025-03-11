@@ -48,36 +48,138 @@ bee-configs:
   sepolia:
     _inherit: ""
     bootnodes: "/dnsaddr/testnet.ethswarm.org"
- 
+
 checks:
-  testnet-load:
+  pt-pingpong:
+    options:
+    timeout: 30m
+    type: pingpong
+  pt-retrieval:
+    options:
+      chunks-per-node: 3
+      postage-ttl: 336h
+      postage-depth: 22
+      postage-label: test-label
+      upload-node-count: 3
+    timeout: 15m
+    type: retrieval
+  pt-settlements:
+    options:
+      dry-run: false
+      expect-settlements: true
+      file-name: settlements
+      file-size: 14680064 # 14mb = 14*1024*1024
+      postage-ttl: 336h
+      postage-depth: 22
+      postage-label: test-label
+      threshold: 100000000
+      upload-node-count: 3
+      wait-before-download: 15s
+    timeout: 15m
+    type: settlements
+  pt-manifest:
+    options:
+      files-in-collection: 10
+      max-pathname-length: 64
+      postage-ttl: 336h
+      postage-depth: 22
+      postage-label: test-label
+    timeout: 30m
+    type: manifest
+  pt-pss:
+    options:
+      count: 3
+      address-prefix: 2
+      postage-ttl: 336h
+      postage-depth: 22
+      postage-label: test-label
+      request-timeout: 10m
+    timeout: 30m
+    type: pss
+  pt-soc:
+    options:
+      postage-ttl: 336h
+      postage-depth: 22
+      postage-label: test-label
+      request-timeout: 5m
+    timeout: 15m
+    type: soc
+  pt-pushsync-chunks:
+    options:
+      chunks-per-node: 3
+      mode: chunks
+      postage-ttl: 336h
+      postage-depth: 22
+      postage-label: test-label
+      retries: 5
+      retry-delay: 15s
+      upload-node-count: 3
+      exclude-node-group:
+        - light
+        - bootnode
+    timeout: 30m
+    type: pushsync
+  pt-postage:
+    type: postage
+    timeout: 30m
+    options:
+      postage-label: postage-check
+      postage-amount: 140000000
+      postage-depth: 17
+      postage-topup-amount: 100
+      postage-new-depth: 18
+  pt-gsoc:
+    options:
+      postage-ttl: 336h
+      postage-depth: 22
+      postage-label: test-label
+    timeout: 10m
+    type: gsoc
+  pt-feed:
+    options:
+      postage-ttl: 336h
+      postage-depth: 22
+      postage-label: test-label
+    timeout: 30m
+    type: feed
+  pt-feed-availability:
+    options:
+      root-ref: "6c8ee8e33d1eb652cd595dc34ab212ca1970762ad02364c7b45e8c3ba7742666"
+    type: feed
+  pt-redundancy:
+    options:
+      postage-ttl: 336h
+      postage-depth: 22
+      postage-label: test-label
+      seed:
+      data-size: 307200
+    timeout: 15m
+    type: redundancy
+  pt-load:
     options:
       content-size: 50000000
-      postage-ttl: 336h # 1024/15*60*60*24*7
-      postage-depth: 24
-      duration: 12h
+      postage-ttl: 720h
+      postage-depth: 22
+      postage-label: test-label
+      duration: 720h
       uploader-count: 2
       downloader-count: 0
-      max-use-batch: 1h
+      max-committed-depth: 2
+      committed-depth-check-wait: 5m
       upload-groups:
         - bee-1
         - bee-2
       download-groups:
         - bee-3
         - bee-4
-    timeout: 12h
+    timeout: 721h
     type: load
-  testnet-smoke:
+  pt-smoke:
     options:
       content-size: 50000000
-      postage-ttl: 336h # 1024/15*60*60*24*7
-      postage-depth: 24
-    timeout: 720h
+      postage-ttl: 336h
+      postage-depth: 22
+      postage-label: test-label
+      duration: 720h
+    timeout: 721h
     type: smoke
-  testnet-erasure-code:
-    options:
-      content-size: 5000000
-      postage-ttl: 336h # 1024/15*60*60*24*7
-      postage-depth: 24
-    timeout: 720h
-    type: erasure-code

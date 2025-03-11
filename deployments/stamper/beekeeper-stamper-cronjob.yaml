@@ -46,7 +46,7 @@ config:
       "--timeout=0",
       "--geth-url=http://rpc-sepolia-haproxy.default.svc.swarm1.local",
       "--log-verbosity=debug",
-      "--config-git-repo=https://github.com/ethersphere/beekeeper",
+      "--config-git-repo=https://github.com/ethersphere/beekeeper-config.git",
       "--config-git-dir=config",
       "--config-git-branch=master",
       "--metrics-enabled=false",

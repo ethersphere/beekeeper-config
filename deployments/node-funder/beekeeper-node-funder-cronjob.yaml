@@ -44,7 +44,7 @@ config:
       "--min-native=0.1",
       "--wallet-key={{ beekeeper_eth_private_key }}",
       "--log-verbosity=debug",
-      "--config-git-repo=https://github.com/ethersphere/beekeeper",
+      "--config-git-repo=https://github.com/ethersphere/beekeeper-config.git",
       "--config-git-dir=config",
       "--config-git-branch=master",
       "--metrics-enabled=false",
