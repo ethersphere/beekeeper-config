@@ -4,12 +4,9 @@ clusters:
     name: dev-bee
     namespace: dev-bee-gateway
     disable-namespace: true
-    api-domain: dev-bee-gateway.mainnet.internal
+    api-domain-internal: 'dev-bee-gateway.svc.godfather2.local:1633'
     api-insecure-tls: true
-    api-scheme: https
-    debug-api-domain: dev-bee-gateway.mainnet.internal
-    debug-api-insecure-tls: true
-    debug-api-scheme: https
+    api-scheme: http
     funding:
       eth: 0.1
       gbzz: 2.0
