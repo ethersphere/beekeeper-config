@@ -5,6 +5,7 @@ clusters:
     namespace: bee-sla
     disable-namespace: true
     api-domain: internal.ethswarm.org
+    api-domain-internal: 'bee-sla.svc.godfather2.local:1633'
     api-insecure-tls: true
     api-scheme: https
     funding:

@@ -7,6 +7,7 @@ clusters:
     namespace: bee-light-testnet
     disable-namespace: true
     api-domain: lightnet.testnet.internal:1633
+    api-domain-internal: bee-light-testnet.svc.swarm1.local:1633
     api-insecure-tls: true
     api-scheme: http
     funding:
