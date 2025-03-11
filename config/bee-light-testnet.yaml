@@ -47,7 +47,7 @@ bee-configs:
   sepolia:
     _inherit: ""
     #bootnodes: "/dnsaddr/testnet.ethswarm.org"
- 
+
 checks:
   testnet-load:
     options:
@@ -69,14 +69,7 @@ checks:
   testnet-smoke:
     options:
       content-size: 5000000
-      postage-ttl: 168h # 1024/15*60*60*24*7
-      postage-depth: 24
-    timeout: 720h
-    type: smoke
-  testnet-erasure-code:
-    options:
-      content-size: 5000000
       postage-ttl: 168h
       postage-depth: 24
     timeout: 720h
-    type: erasure-code
+    type: smoke

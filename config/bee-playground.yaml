@@ -31,12 +31,12 @@ bee-configs:
   sepolia:
     _inherit: ""
     bootnodes: "/dnsaddr/testnet.ethswarm.org"
- 
+
 checks:
   playground-load:
     options:
       content-size: 50000000
-      postage-amount: 1000000000 # 1024/15*60*60*24*7
+      postage-ttl: 168h
       postage-depth: 24
       duration: 12h
       uploader-count: 2
@@ -51,7 +51,8 @@ checks:
   playground-smoke:
     options:
       content-size: 5000000
-      postage-amount: 1000000000 # 1024/15*60*60*24*7
+      postage-ttl: 168h
       postage-depth: 24
-    timeout: 720h
+      duration: 720h
+    timeout: 721h
     type: smoke
