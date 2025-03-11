@@ -1,0 +1,21 @@
+image:
+  pullPolicy: IfNotPresent
+  tag: "{{ beekeeper_tag }}"
+
+serviceAccount:
+  ## Specifies whether a service account should be created
+  create: true
+  ## create role or/and cluster role for the service account
+  createRole: true
+  createClusterRole: true
+
+config:
+  command: ['beekeeper', 'node-funder', '--addresses=0x369e38fb83148fb269f74863006e0e6210fe0c3e,0x31ac10a776a10242b2027da315d5f456d70fb98f,0xe2d71aad5e0066be7f4e3f914ceaa4327d8a39e8,0x8680d5562e5381d2b5011dd1b86ecf61a81ec8dc,0x5cb4839b7d7b0ab6baabfedd6749497eca65b2ca', '--min-swarm=50', '--min-native=1', '--wallet-key={{ beekeeper_eth_private_key }}']
+  # environment variables
+  CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
+  CONFIG_GIT_BRANCH: master
+  GETH_URL: http://rpc-gnosis-haproxy.default.svc.{{ cluster_id }}.local
+  # cron job
+  schedule: '10 * */7 * *'
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
