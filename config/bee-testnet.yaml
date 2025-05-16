@@ -57,7 +57,7 @@ checks:
   pt-retrieval:
     options:
       chunks-per-node: 3
-      postage-ttl: 336h
+      postage-ttl: 72h
       postage-depth: 22
       postage-label: test-label
       upload-node-count: 3
@@ -69,7 +69,7 @@ checks:
       expect-settlements: true
       file-name: settlements
       file-size: 14680064 # 14mb = 14*1024*1024
-      postage-ttl: 336h
+      postage-ttl: 72h
       postage-depth: 22
       postage-label: test-label
       threshold: 100000000
@@ -81,7 +81,7 @@ checks:
     options:
       files-in-collection: 10
       max-pathname-length: 64
-      postage-ttl: 336h
+      postage-ttl: 72h
       postage-depth: 22
       postage-label: test-label
     timeout: 30m
@@ -90,7 +90,7 @@ checks:
     options:
       count: 3
       address-prefix: 2
-      postage-ttl: 336h
+      postage-ttl: 72h
       postage-depth: 22
       postage-label: test-label
       request-timeout: 10m
@@ -98,7 +98,7 @@ checks:
     type: pss
   pt-soc:
     options:
-      postage-ttl: 336h
+      postage-ttl: 72h
       postage-depth: 22
       postage-label: test-label
       request-timeout: 5m
@@ -108,7 +108,7 @@ checks:
     options:
       chunks-per-node: 3
       mode: chunks
-      postage-ttl: 336h
+      postage-ttl: 72h
       postage-depth: 22
       postage-label: test-label
       retries: 5
@@ -130,14 +130,14 @@ checks:
       postage-new-depth: 18
   pt-gsoc:
     options:
-      postage-ttl: 336h
+      postage-ttl: 72h
       postage-depth: 22
       postage-label: test-label
     timeout: 10m
     type: gsoc
   pt-feed:
     options:
-      postage-ttl: 336h
+      postage-ttl: 72h
       postage-depth: 22
       postage-label: test-label
     timeout: 30m
@@ -148,20 +148,20 @@ checks:
     type: feed
   pt-redundancy:
     options:
-      postage-ttl: 336h
+      postage-ttl: 72h
       postage-depth: 22
       postage-label: test-label
       seed:
       data-size: 307200
     timeout: 15m
     type: redundancy
-  pt-load:
+  pt-testnet-load:
     options:
       content-size: 50000000
-      postage-ttl: 720h
+      postage-ttl: 72h
       postage-depth: 22
       postage-label: test-label
-      duration: 720h
+      duration: 12h
       uploader-count: 2
       downloader-count: 0
       max-committed-depth: 2
@@ -172,12 +172,12 @@ checks:
       download-groups:
         - bee-3
         - bee-4
-    timeout: 721h
+    timeout: 13h
     type: load
   pt-smoke:
     options:
       content-size: 50000000
-      postage-ttl: 336h
+      postage-ttl: 72h
       postage-depth: 22
       postage-label: test-label
       duration: 720h
