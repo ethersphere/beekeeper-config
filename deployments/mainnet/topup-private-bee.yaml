@@ -10,7 +10,7 @@ serviceAccount:
   createClusterRole: true
 
 config:
-  command: ['beekeeper', 'stamper', 'topup', '--namespace=bee', '--batch-ids=e36969ecb200e0cc0b3503cf5f2ee1b39eb7d98a1849e16194f4d38395b2f28d']
+  command: ['beekeeper', 'stamper', 'topup', '--namespace=bee', '--in-cluster=true',  '--batch-ids=e36969ecb200e0cc0b3503cf5f2ee1b39eb7d98a1849e16194f4d38395b2f28d']
   # environment variables
   CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
   CONFIG_GIT_BRANCH: master
