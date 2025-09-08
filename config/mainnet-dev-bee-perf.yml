@@ -4,10 +4,10 @@ clusters:
     name: bee
     namespace: dev-bee-perf
     disable-namespace: true
-    api-domain: mainnet.internal
+    api-domain: dev-bee-perf.mainnet.internal
     api-domain-internal: dev-bee-perf.svc.godfather2.local:1633
     api-insecure-tls: true
-    api-scheme: https
+    api-scheme: http
     funding:
       eth: 0.1
       gbzz: 2.0
