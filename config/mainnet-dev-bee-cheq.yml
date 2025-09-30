@@ -1,0 +1,70 @@
+clusters:
+  mainnet-dev-bee-perf:
+    _inherit: ""
+    name: bee
+    namespace: dev-bee-perf
+    disable-namespace: true
+    api-domain: dev-bee-perf.mainnet.internal
+    api-domain-internal: dev-bee-perf.svc.godfather2.local:1633
+    api-insecure-tls: true
+    api-scheme: http
+    funding:
+      eth: 0.1
+      gbzz: 2.0
+    node-groups:
+      cheq-1:
+        mode: node
+        bee-config: mainnet-dev-bee-cheq
+        config: mainnet-dev-bee-cheq
+        count: 1
+      cheq-2:
+        mode: node
+        bee-config: mainnet-dev-bee-cheq
+        config: mainnet-dev-bee-cheq
+        count: 1
+      cheq-3:
+        mode: node
+        bee-config: mainnet-dev-bee-nocheq
+        config: mainnet-dev-bee-nocheq
+        count: 1
+      cheq-4:
+        mode: node
+        bee-config: mainnet-dev-bee-nocheq
+        config: mainnet-dev-bee-nocheq
+        count: 1
+
+# node-groups defines node groups that can be registered in the cluster
+# node-groups may inherit it's configuration from already defined node-group and override specific fields from it
+node-groups:
+  mainnet-dev-bee-cheq:
+    _inherit: "default"
+    persistence-enabled: true
+
+# bee-configs defines Bee configuration that can be assigned to node-groups
+# bee-configs may inherit it's configuration from already defined bee-config and override specific fields from it
+bee-configs:
+  mainnet-dev-bee-cheq:
+    _inherit: "default"
+    bootnodes: "/dnsaddr/mainnet.ethswarm.org"
+    chequebook-enable: true
+  mainnet-dev-bee-nocheq:
+    _inherit: "default"
+    bootnodes: "/dnsaddr/mainnet.ethswarm.org"
+    chequebook-enable: false
+
+# checks defines checks Beekeeper can execute against the cluster
+# type filed allows defining same check with different names and options
+checks:
+  performance-benchmark:
+    options:
+      file-sizes: [1024, 10240, 102400, 1048576, 52428800, 209715200] # [1KB, 10KB, 100KB, 1MB, 50MB, 200MB]
+      postage-ttl: 24h
+      postage-depth: 21
+      postage-label: performance-test
+      nodes-sync-wait: 30s
+      upload-timeout: 7m
+      download-timeout: 7m
+      iteration-wait: 2m
+      duration: 14m  
+    timeout: 15m
+    type: smoke

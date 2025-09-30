@@ -1,0 +1,22 @@
+image:
+  pullPolicy: IfNotPresent
+  tag: "{{ beekeeper_tag }}"
+
+serviceAccount:
+  ## Specifies whether a service account should be created
+  create: true
+  ## create role or/and cluster role for the service account
+  createRole: true
+  createClusterRole: true
+
+config:
+  command: ['beekeeper', 'check', '--cluster-name=mainnet-dev-bee-perf', '--checks=performance-benchmark', '--in-cluster=true', '--metrics-pusher-address=pushgateway-prometheus-pushgateway.monitoring.svc.{{ cluster_id }}.local:9091']
+  dirPath: 'files'
+  CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
+  CONFIG_GIT_BRANCH: master
+  CONFIG_GIT_DIR: 'config'
+  GETH_URL: http://rpc-gnosis-haproxy.default.svc.{{ cluster_id }}.local
+  # cron job
+  schedule: '0 9 * * *'
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
