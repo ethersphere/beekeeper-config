@@ -10,7 +10,7 @@ serviceAccount:
   createClusterRole: true
 
 config:
-  command: ['beekeeper', 'check', '--cluster-name=mainnet-dev-bee-perf', '--checks=performance-benchmark', '--in-cluster=true', '--metrics-pusher-address=pushgateway-prometheus-pushgateway.monitoring.svc.{{ cluster_id }}.local:9091']
+  command: ['beekeeper', 'check', '--cluster-name=mainnet-dev-bee-cheq', '--checks=performance-benchmark', '--in-cluster=true', '--metrics-pusher-address=pushgateway-prometheus-pushgateway.monitoring.svc.{{ cluster_id }}.local:9091']
   dirPath: 'files'
   CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
   CONFIG_GIT_BRANCH: master
