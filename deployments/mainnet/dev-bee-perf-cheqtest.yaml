@@ -18,5 +18,5 @@ config:
   GETH_URL: http://rpc-gnosis-haproxy.default.svc.{{ cluster_id }}.local
   # cron job
   schedule: '0 * * * *'
-  successfulJobsHistoryLimit: 3
-  failedJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
