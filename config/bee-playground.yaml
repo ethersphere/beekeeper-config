@@ -15,7 +15,7 @@ clusters:
     node-groups:
       bee-:
         mode: node
-        bee-config: sepolia
+        bee-config: sepolia-bee-playground
         config: ng-bee-playground
         count: 3
 # node-groups defines node groups that can be registered in the cluster
@@ -28,7 +28,7 @@ node-groups:
 # bee-configs defines Bee configuration that can be assigned to node-groups
 # bee-configs may inherit it's configuration from already defined bee-config and override specific fields from it
 bee-configs:
-  sepolia:
+  sepolia-bee-playground:
     _inherit: ""
     bootnodes: "/dnsaddr/testnet.ethswarm.org"
 
