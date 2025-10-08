@@ -17,22 +17,22 @@ clusters:
     node-groups:
       bee-1:
         mode: node
-        bee-config: sepolia
+        bee-config: sepolia-testnet
         config: ng-bee-testnet
         count: 5
       bee-2:
         mode: node
-        bee-config: sepolia
+        bee-config: sepolia-testnet
         config: ng-bee-testnet
         count: 5
       bee-3:
         mode: node
-        bee-config: sepolia
+        bee-config: sepolia-testnet
         config: ng-bee-testnet
         count: 5
       bee-4:
         mode: node
-        bee-config: sepolia
+        bee-config: sepolia-testnet
         config: ng-bee-testnet
         count: 5
 
@@ -46,7 +46,7 @@ node-groups:
 # bee-configs defines Bee configuration that can be assigned to node-groups
 # bee-configs may inherit it's configuration from already defined bee-config and override specific fields from it
 bee-configs:
-  sepolia:
+  sepolia-testnet:
     _inherit: ""
     bootnodes: "/dnsaddr/testnet.ethswarm.org"
     full-node: true
