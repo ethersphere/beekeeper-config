@@ -182,6 +182,6 @@ checks:
       postage-ttl: 336h
       postage-depth: 22
       postage-label: test-label
-      duration: 720h
-    timeout: 721h
+      duration: 12h
+    timeout: 13h
     type: smoke
