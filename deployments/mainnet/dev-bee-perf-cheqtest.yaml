@@ -19,4 +19,4 @@ config:
   # cron job
   schedule: '0 * * * *'
   successfulJobsHistoryLimit: 1
-  failedJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 2
