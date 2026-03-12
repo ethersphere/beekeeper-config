@@ -1,11 +1,11 @@
 image:
-  repository: ethersphere/beekeeper
-  tag: latest
+  repository: ljubisagacevic/beekeeper
+  tag: rlevel
   pullPolicy: Always
 
 imagePullSecrets: []
-nameOverride: "beekeeper-light-testnet-smoke-cronjob"
-fullnameOverride: "beekeeper-light-testnet-smoke-cronjob"
+nameOverride: "beekeeper-light-testnet-smoke"
+fullnameOverride: "beekeeper-light-testnet-smoke"
 
 serviceAccount:
   ## Specifies whether a service account should be created
