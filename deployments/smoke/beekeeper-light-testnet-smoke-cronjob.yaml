@@ -1,6 +1,6 @@
 image:
   repository: ljubisagacevic/beekeeper
-  tag: rlevel
+  tag: rlevel-v2
   pullPolicy: Always
 
 imagePullSecrets: []
