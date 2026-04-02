@@ -6,6 +6,7 @@ Deploy the Helm chart to install the Beekeeper job:
 
 ```bash
 helm upgrade --install beekeeper-check-public ethersphere/beekeeper --namespace beekeeper -f ./beekeeper-check-public.yaml
+helm upgrade --install beekeeper-light-testnet-checks ethersphere/beekeeper --namespace beekeeper -f ./beekeeper-check-bee-light-testnet.yaml
 ```
 
 ## Uninstalling the Job
