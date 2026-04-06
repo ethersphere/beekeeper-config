@@ -6,6 +6,7 @@ Deploy the Helm chart to install the Beekeeper job:
 
 ```bash
 helm upgrade --install beekeeper-smoke-public ethersphere/beekeeper --namespace beekeeper -f ./beekeeper-smoke-public.yaml
+helm upgrade --install beekeeper-light-testnet-smoke ethersphere/beekeeper --namespace beekeeper -f ./beekeeper-light-testnet-smoke-cronjob.yaml
 ```
 
 ## Uninstalling the Job
@@ -14,6 +15,7 @@ To uninstall the deployed Beekeeper job:
 
 ```bash
 helm uninstall beekeeper-smoke-public --namespace=beekeeper
+helm uninstall beekeeper-light-testnet-smoke --namespace=beekeeper
 ```
 
 ## Manually Start a Job from the Scheduled CronJob (Optional)
