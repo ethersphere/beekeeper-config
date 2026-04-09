@@ -179,6 +179,8 @@ checks:
   pt-smoke:
     options:
       content-size: 50000000
+      file-sizes: [5000000, 10000000, 20000000, 50000000] # 5mb, 10mb, 20mb, 50mb
+      r-levels: [0, 1, 2, 3, 4] # NONE, MEDIUM, STRONG, INSANE, PARANOID
       postage-ttl: 336h
       postage-depth: 22
       postage-label: test-label
