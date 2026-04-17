@@ -15,6 +15,7 @@ To uninstall the deployed Beekeeper job:
 
 ```bash
 helm uninstall beekeeper-check-public --namespace=beekeeper
+helm uninstall beekeeper-light-testnet-checks --namespace=beekeeper
 ```
 
 ## Manually Start a Job from the Scheduled CronJob (Optional)
