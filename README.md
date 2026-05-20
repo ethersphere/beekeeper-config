@@ -117,3 +117,8 @@ A Beekeeper run then selects the variant with `--checks=pushsync-chunks` or `--c
 1. Drop a new file in `config/` defining the cluster, its node-groups, bee-config, and the checks/smoke/load it should run.
 2. Add the matching Helm values file in the relevant `deployments/<kind>/` directory, pointing `--cluster-name` and `--checks` at the new config and setting a `schedule:`.
 3. Open a PR. Once merged on the branch referenced by the deployment (`--config-git-branch`), the next CronJob run picks it up.
+
+## Maintainers
+
+- [Bee](https://github.com/orgs/ethersphere/teams/bee) team
+- [DevOps](https://github.com/orgs/ethersphere/teams/devops) team
