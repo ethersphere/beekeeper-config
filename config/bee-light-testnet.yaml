@@ -48,7 +48,7 @@ bee-configs:
   sepolia-light:
     _inherit: ""
     full-node: true
-    #bootnodes: "/dnsaddr/testnet.ethswarm.org"
+    #bootnode: ["/dnsaddr/testnet.ethswarm.org"]
 
 checks:
   testnet-load:

@@ -44,7 +44,7 @@ node-groups:
 bee-configs:
   mainnet-sla:
     _inherit: "default"
-    bootnodes: "/dnsaddr/mainnet.ethswarm.org"
+    bootnode: ["/dnsaddr/mainnet.ethswarm.org"]
 
 # checks defines checks Beekeeper can execute against the cluster
 # type filed allows defining same check with different names and options

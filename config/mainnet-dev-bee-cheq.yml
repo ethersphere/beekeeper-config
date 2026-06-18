@@ -48,11 +48,11 @@ node-groups:
 bee-configs:
   mainnet-dev-bee-cheq:
     _inherit: "default"
-    bootnodes: "/dnsaddr/mainnet.ethswarm.org"
+    bootnode: ["/dnsaddr/mainnet.ethswarm.org"]
     chequebook-enable: true
   mainnet-dev-bee-nocheq:
     _inherit: "default"
-    bootnodes: "/dnsaddr/mainnet.ethswarm.org"
+    bootnode: ["/dnsaddr/mainnet.ethswarm.org"]
     chequebook-enable: false
 
 # checks defines checks Beekeeper can execute against the cluster
