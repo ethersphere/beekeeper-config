@@ -30,7 +30,7 @@ node-groups:
 bee-configs:
   sepolia-bee-playground:
     _inherit: ""
-    bootnodes: "/dnsaddr/testnet.ethswarm.org"
+    bootnode: ["/dnsaddr/testnet.ethswarm.org"]
 
 checks:
   playground-load:
