@@ -24,7 +24,7 @@ deployments/    # Helm values for deploying Beekeeper jobs into K8s
   debug/        # ad-hoc debug pods
 ```
 
-Each environment has a matching pair — e.g. `config/bee-base.yaml` is consumed by `deployments/{check,smoke,load}/beekeeper-*-bee-base.yaml`.
+Each environment has a matching config in `config/` consumed by Helm values files in `deployments/<kind>/`.
 
 ## Clusters
 
@@ -34,7 +34,6 @@ Today the repo targets:
 | ---------------------- | ------------------------------------ | ------------------------------------ |
 | `bee-testnet`          | `config/bee-testnet.yaml`            | public testnet checks / smoke / load |
 | `bee-light-testnet`    | `config/bee-light-testnet.yaml`      | light-mode testnet                   |
-| `bee-base`             | `config/bee-base.yaml`               | base cluster (Sepolia)               |
 | `bee-playground`       | `config/bee-playground.yaml`         | scratch / experiments                |
 | `mainnet-sla`          | `config/mainnet-sla.yml`             | mainnet SLA monitoring               |
 | `mainnet-dev-bee-*`    | `config/mainnet-dev-bee-*.yaml`      | dev mainnet performance / cheq tests |
@@ -49,9 +48,9 @@ helm repo add ethersphere https://ethersphere.github.io/helm
 helm repo update
 
 # install (or upgrade) a job
-helm upgrade --install beekeeper-bee-base-checks ethersphere/beekeeper \
+helm upgrade --install beekeeper-check-public ethersphere/beekeeper \
   --namespace beekeeper \
-  -f deployments/check/beekeeper-check-bee-base.yaml
+  -f deployments/check/beekeeper-check-public.yaml
 ```
 
 Trigger a CronJob immediately instead of waiting for the schedule:
