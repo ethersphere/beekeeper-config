@@ -15,8 +15,14 @@ config:
   CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
   CONFIG_GIT_BRANCH: master
   GETH_URL: http://rpc-gnosis-haproxy.default.svc.{{ cluster_id }}.local
-  # cron job
-  schedule: '* */12 */7 * *'
+  # cron job - every 12 hours, at 00:00 and 12:00
+  #
+  # WAS: '* */12 */7 * *' - same defect as node-funder-sla. Day-of-month */7
+  # restricts it to days 1, 8, 15, 22, 29 only, and minute '*' made it fire
+  # every minute for two hours on those days. The dev-bee-perf cheq nodes could
+  # therefore go up to 7 days without a top-up. See node-funder-sla.yaml for the
+  # 30-day outage this exact pattern caused on bee-sla.
+  schedule: '0 */12 * * *'
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
 

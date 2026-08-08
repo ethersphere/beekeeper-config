@@ -15,8 +15,15 @@ config:
   CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
   CONFIG_GIT_BRANCH: master
   GETH_URL: http://rpc-gnosis-haproxy.default.svc.{{ cluster_id }}.local
-  # cron job
-  schedule: '* */12 */7 * *'
+  # cron job - every 12 hours, at 00:00 and 12:00
+  #
+  # WAS: '* */12 */7 * *' which is NOT "every 12 hours". Day-of-month */7 means
+  # only days 1, 8, 15, 22 and 29, and minute '*' means it then fired every
+  # minute for two solid hours (~120 Jobs). Between those days it never ran at
+  # all. On 2026-07-08 the bee-sla node wallets ran dry and were not topped up
+  # again until a manual run on 2026-08-07 - 30 days of failed SLA checks,
+  # because the next scheduled run was simply never due.
+  schedule: '0 */12 * * *'
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
 

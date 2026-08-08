@@ -15,7 +15,13 @@ config:
   CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
   CONFIG_GIT_BRANCH: master
   GETH_URL: http://rpc-gnosis-haproxy.default.svc.{{ cluster_id }}.local
-  # cron job
-  schedule: '10 * */7 * *'
+  # cron job - hourly at :10
+  #
+  # WAS: '10 * */7 * *'. Minute and hour were already correct (hourly at :10);
+  # the day-of-month */7 was the defect, restricting it to days 1, 8, 15, 22, 29
+  # so these nodes could go 7 days without a top-up. Only that field is removed,
+  # so the original hourly intent is preserved. See node-funder-sla.yaml for the
+  # 30-day outage the same day-of-month pattern caused on bee-sla.
+  schedule: '10 * * * *'
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
