@@ -8,8 +8,20 @@ serviceAccount:
   createRole: true
   createClusterRole: true
 
+## The funding wallet key is injected from a Secret rather than passed on the
+## command line: anything in config.command is stored verbatim in the CronJob
+## spec and is readable by anyone who can read that object in the namespace.
+## Beekeeper reads --wallet-key from BEEKEEPER_WALLET_KEY (viper, prefix
+## "beekeeper", dashes replaced by underscores). Requires chart >= 0.4.14.
+extraEnv:
+  - name: BEEKEEPER_WALLET_KEY
+    valueFrom:
+      secretKeyRef:
+        name: beekeeper-wallet-key
+        key: walletKey
+
 config:
-  command: ['beekeeper', 'node-funder', '--addresses=0xfe98c6ee829e794d2c96dd15cb0bcb39441fd38f', '--min-swarm=150', '--min-native=1', '--wallet-key={{ beekeeper_eth_private_key }}']
+  command: ['beekeeper', 'node-funder', '--addresses=0xfe98c6ee829e794d2c96dd15cb0bcb39441fd38f', '--min-swarm=150', '--min-native=1']
   # environment variables
   CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
   CONFIG_GIT_BRANCH: master
