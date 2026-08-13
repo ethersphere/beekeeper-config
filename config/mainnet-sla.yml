@@ -50,6 +50,13 @@ bee-configs:
 # checks defines checks Beekeeper can execute against the cluster
 # type filed allows defining same check with different names and options
 checks:
+  sla-feed:
+    options:
+      postage-ttl: 24h
+      postage-depth: 17 # minimum usable depth (bucket depth is 16)
+      postage-label: sla-feed # distinct label so the batch is reused until full
+    timeout: 1h
+    type: feed
   sla-smoke:
     options:
       content-size: 50000000
