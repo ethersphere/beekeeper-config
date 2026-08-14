@@ -10,7 +10,7 @@ serviceAccount:
   createClusterRole: true
 
 config:
-  command: ['beekeeper', 'check', '--cluster-name=mainnet-sla', '--checks=sla-feed', '--create-cluster=false', '--metrics-pusher-address=pushgateway-prometheus-pushgateway.monitoring.svc.{{ cluster_id }}.local:9091', '--timeout=1h', '--in-cluster=true']
+  command: ['beekeeper', 'check', '--cluster-name=mainnet-sla', '--checks=sla-feed', '--metrics-labels=check=sla-feed', '--create-cluster=false', '--metrics-pusher-address=pushgateway-prometheus-pushgateway.monitoring.svc.{{ cluster_id }}.local:9091', '--timeout=1h', '--in-cluster=true']
   dirPath: 'files'
   # environment variables
   CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
