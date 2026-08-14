@@ -17,7 +17,13 @@ config:
   CONFIG_GIT_BRANCH: master
   CONFIG_GIT_DIR: 'config'
   GETH_URL: http://rpc-gnosis-haproxy.default.svc.{{ cluster_id }}.local
-  # cron job
-  schedule: '30 */12 * * *'
+  # cron job - every 2h.
+  # The postage batch is reused until full or expired, so run frequency
+  # costs chunk capacity rather than BZZ: a new batch is bought once per
+  # 48h TTL regardless of cadence. At depth 17 a bucket holds 2 chunks and
+  # the batch counts as full when any bucket fills, which at ~10 chunks per
+  # run is roughly 36 runs - still beyond the 48h expiry at this cadence.
+  # 12 samples/day instead of 2 makes latency trends and alerting usable.
+  schedule: '30 */2 * * *'
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
