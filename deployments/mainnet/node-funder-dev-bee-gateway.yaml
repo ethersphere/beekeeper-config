@@ -1,0 +1,33 @@
+image:
+  pullPolicy: IfNotPresent
+  tag: "{{ beekeeper_tag }}"
+
+serviceAccount:
+  ## Specifies whether a service account should be created
+  create: true
+  ## create role or/and cluster role for the service account
+  createRole: true
+  createClusterRole: true
+
+## The funding wallet key is injected from a Secret rather than passed on the
+## command line: anything in config.command is stored verbatim in the CronJob
+## spec and is readable by anyone who can read that object in the namespace.
+## Beekeeper reads --wallet-key from BEEKEEPER_WALLET_KEY (viper, prefix
+## "beekeeper", dashes replaced by underscores). Requires chart >= 0.4.14.
+extraEnv:
+  - name: BEEKEEPER_WALLET_KEY
+    valueFrom:
+      secretKeyRef:
+        name: beekeeper-wallet-key
+        key: walletKey
+
+config:
+  command: ['beekeeper', 'node-funder', '--namespace=dev-bee-gateway', '--label-selector=app.kubernetes.io/name=bee', '--min-swarm=50', '--min-native=1']
+  # environment variables
+  CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
+  CONFIG_GIT_BRANCH: master
+  GETH_URL: http://rpc-gnosis-haproxy.default.svc.{{ cluster_id }}.local
+  # cron job - every 12 hours
+  schedule: '25 */12 * * *'
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
