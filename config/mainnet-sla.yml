@@ -63,6 +63,10 @@ checks:
     type: feed
   sla-smoke:
     options:
+      # 1h under the 12h cron period so the run always finishes before the next
+      # trigger; with concurrencyPolicy Forbid an overrun skips a whole cycle.
+      # Same convention as mainnet-dev-bee-cheq.
+      duration: 11h
       content-size: 50000000
       postage-ttl: 48h # 24000/5*60*60*24*7
       postage-depth: 20

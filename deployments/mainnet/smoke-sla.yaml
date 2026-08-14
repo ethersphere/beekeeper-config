@@ -17,7 +17,12 @@ config:
   CONFIG_GIT_BRANCH: master
   CONFIG_GIT_DIR: 'config'
   GETH_URL: http://rpc-gnosis-haproxy.default.svc.{{ cluster_id }}.local
-  # cron job
-  schedule: '10 */2 * * *'
+  # cron job - every 12h, matching the check's 11h duration.
+  # WAS '10 */2 * * *'. The smoke check is a continuous sampler, not a
+  # one-shot: it loops every iteration-wait for `duration` (12h by default).
+  # With concurrencyPolicy Forbid a 12h run silently skipped the 22:10,
+  # 00:10, 02:10, 04:10 and 06:10 triggers, so a schedule advertising a 2h
+  # cadence actually delivered two runs a day.
+  schedule: '10 */12 * * *'
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
