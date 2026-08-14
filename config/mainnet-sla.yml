@@ -52,7 +52,11 @@ bee-configs:
 checks:
   sla-feed:
     options:
-      postage-ttl: 24h
+      # 24h was rejected by bee: "insufficient amount for 24h minimum validity".
+      # beekeeper derives the batch amount as (ttl_seconds / blockTime) * price
+      # with integer division, so asking for exactly the 24h minimum lands on or
+      # just below bee's threshold. 48h clears it and matches sla-smoke.
+      postage-ttl: 48h
       postage-depth: 17 # minimum usable depth (bucket depth is 16)
       postage-label: sla-feed # distinct label so the batch is reused until full
     timeout: 1h
