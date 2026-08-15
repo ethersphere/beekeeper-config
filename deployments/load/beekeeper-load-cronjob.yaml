@@ -58,15 +58,33 @@ nodeSelector: {}
 # testnet-smoke. Whoever last fixed this fixed it on the cluster and never
 # brought it back here.
 #
-# Live is treated as the source of truth: this is a record of what runs, not a
-# redesign. Two things are deliberately captured rather than endorsed, and are
-# worth a separate decision:
-#   1. --config-git-repo points at ethersphere/beekeeper, NOT this repo. For
-#      this check, beekeeper-config is not the source of truth for cluster and
-#      check definitions.
-#   2. backoffLimit was 1 here and unset on the live Job (so the Kubernetes
-#      default of 6 applies). Left at 1 rather than guessing - flag if the
-#      difference matters.
+# Live was treated as the source of truth for the mechanical fields above, with
+# one deliberate exception:
+#
+#   --config-git-repo now points at THIS repo, not ethersphere/beekeeper.
+#
+# The live job read cluster and check definitions from the upstream *code*
+# repo, whose config/ directory holds upstream's own examples (local.yaml,
+# localhost.yaml, staging.yaml...). Production checks should not take their
+# definitions from a directory upstream can change without warning. The two
+# other testnet jobs (beekeeper-check-public.yaml,
+# beekeeper-node-funder-cronjob.yaml) were already committed pointing here.
+#
+# Diffed before switching (2026-08-16), upstream public-testnet.yaml vs this
+# repo's bee-testnet.yaml: same cluster, same 14 pt-* checks, same node-group,
+# and byte-identical bee-config contents (only the key name differs, sepolia vs
+# sepolia-testnet). The single behavioural change for this job is postage-ttl
+# on pt-testnet-load: 408h upstream -> a uniform 336h here. Chosen deliberately.
+# The larger pt-smoke divergence does not apply - this job does not run it.
+#
+# backoffLimit was 1 here and unset on the live Job (so the Kubernetes default
+# of 6 applies). Left at 1 rather than guessing - flag if the difference
+# matters.
+#
+# NOTE: a push does not deploy this. Three files in this repo were committed
+# pointing at beekeeper-config while the running CronJobs still read upstream,
+# so whatever Semaphore does on push, it is not reconciling every manifest.
+# Changing this file requires an explicit redeploy to take effect.
 config:
   command:
     [
@@ -78,7 +96,7 @@ config:
       "--metrics-pusher-address=pushgateway-prometheus-pushgateway.monitoring.svc.swarm1.local:9091",
       "--timeout=13h",
       "--in-cluster=true",
-      "--config-git-repo=https://github.com/ethersphere/beekeeper",
+      "--config-git-repo=https://github.com/ethersphere/beekeeper-config.git",
       "--config-git-dir=config",
       "--config-git-branch=master",
     ]
