@@ -106,19 +106,36 @@ checks:
       #        17 gives only 2 chunk slots per bucket and overissues at ~3k
       #        chunks. Depth 20 (16 slots) is the practical minimum here.
       #
+      # UPLOAD VIA POST /bzz, NOT POST /bytes.
+      # The check downloads with GET /bzz/<ref>, which needs a manifest. A first
+      # attempt uploaded these with POST /bytes, which stores raw bytes with no
+      # manifest: GET /bytes/<ref> returned the full 158 MB quite happily while
+      # the check failed every attempt with
+      #   response message "address not found or incorrect": status: 404
+      # Note that is a DIFFERENT error from the rot this commit fixes ("hashing
+      # copy: unexpected EOF"), and it is the giveaway for a missing manifest.
+      # The surviving ref is likewise a single-file manifest - GET /bytes on it
+      # returns just 352 bytes (the manifest), not the payload.
+      # Correct form:
+      #   curl -XPOST "$API/bzz?name=<filename>" \
+      #     -H "Swarm-Postage-Batch-Id: <batch>" -H "Swarm-Collection: false" \
+      #     -H "Swarm-Deferred-Upload: false" -H "Swarm-Pin: true" \
+      #     -H "Content-Type: application/octet-stream" --data-binary @<file>
+      #
       # Both replacements are 158,637,636 bytes, matching the surviving ref so
       # throughput stays comparable. Content is reproducible without storing it:
       #   openssl enc -aes-256-ctr -pass pass:"<seed>" -nosalt -in /dev/zero \
       #     | head -c 158637636
-      #   a61d5acf... seed "sla-availability-ref-a-2026-08-16"
+      #   6071ff99... seed "sla-availability-ref-a-2026-08-16"
       #               sha256 9a8e073f2ce01a01b597321c0c4f909688f5bdf207203b27876118b77c19a1db
-      #   e65a8074... seed "sla-availability-ref-b-2026-08-16"
+      #   b805787d... seed "sla-availability-ref-b-2026-08-16"
       #               sha256 533e4ff956ea5e77bbe37ca283453bdd5b049449f3c85bc33bb23433869794b9
-      # Both verified downloading in full, with matching checksums, from
-      # bee-sla-4-0 and bee-sla-2-0 (uploader was bee-sla-1-0) before this commit.
+      # Both verified with GET /bzz returning the full 158,637,636 bytes and
+      # matching checksums from bee-sla-2-0, bee-sla-3-0 and bee-sla-4-0
+      # (uploader was bee-sla-1-0) before this commit.
       refs:
-        - "a61d5acf669446701861f63a5b668920a73967cf88608a466f12068c684b25f7"
-        - "e65a807476fe2756cc212eba4c26c7e3e95aa7cea99e4527cce7086eb138accd"
+        - "6071ff99b17ec29fcfd0d4032fda3b312bdc8be686300b910b378e2f8ef8583e"
+        - "b805787dc4ce2ec85f1c59f3f949c007cd978bd62234d7f903462be26a1cdd1e"
         # Original third ref - still healthy, kept for continuity of history.
         - "1cfd24178c67b708694b4ce4235d32e2a39d42813d2b09d1ef77eaa4c954931f"
       retry-wait: 1m
