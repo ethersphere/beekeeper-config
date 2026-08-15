@@ -81,10 +81,24 @@ nodeSelector: {}
 # of 6 applies). Left at 1 rather than guessing - flag if the difference
 # matters.
 #
-# NOTE: a push does not deploy this. Three files in this repo were committed
-# pointing at beekeeper-config while the running CronJobs still read upstream,
-# so whatever Semaphore does on push, it is not reconciling every manifest.
-# Changing this file requires an explicit redeploy to take effect.
+# NOTE: THIS DIRECTORY IS NOT DEPLOYED BY ANYTHING.
+#
+# beekeeper.yml in the ansible repo clones this repo and then selects files by
+# path: `/mainnet/` goes to the mainnetdeploy host (godfather2), `/testnet/` to
+# testnetdeploy (swarm1). Everything under deployments/check, /load,
+# /node-funder, /smoke and /stamper matches neither filter and is therefore
+# never applied - which is exactly why this file drifted so far from the
+# running CronJob, and why its undefined --checks=testnet-smoke never broke
+# anything. Confirmed 2026-08-16: a push DOES auto-deploy mainnet files (the
+# new topup-sla-availability release appeared within four minutes of a push),
+# but files here are skipped.
+#
+# So editing this file changes nothing on its own. The live CronJob was
+# repointed at beekeeper-config by direct kubectl patch on 2026-08-16. To make
+# this directory meaningful, the manifests need moving under deployments/testnet
+# (release name = file basename, so renames create new releases rather than
+# adopting the existing ones - check `kubectl get secret -n beekeeper -l
+# owner=helm` for the current release names first).
 config:
   command:
     [

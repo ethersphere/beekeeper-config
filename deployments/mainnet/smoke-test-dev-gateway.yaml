@@ -1,0 +1,45 @@
+image:
+  pullPolicy: IfNotPresent
+  tag: "{{ beekeeper_tag }}"
+
+serviceAccount:
+  ## Specifies whether a service account should be created
+  create: true
+  ## create role or/and cluster role for the service account
+  createRole: true
+  createClusterRole: true
+
+# Smoke check against the dev gateway cluster.
+#
+# ADDED 2026-08-16 to close an IaC gap. This CronJob has been running on
+# godfather2 as smoke-test-dev-gateway-beekeeper-cronjob, every minute, as a
+# Helm release literally named smoke-test-dev-gateway (chart beekeeper-0.4.11)
+# - but there was NO manifest for it anywhere in this repo. It could not be
+# reviewed, reproduced or safely changed, and the only way to discover its
+# configuration was to read the live object.
+#
+# This file is a faithful capture of the running CronJob, so applying it is a
+# no-op. The release name must stay smoke-test-dev-gateway: beekeeper.yml in
+# the ansible repo derives the Helm release name from this file's basename, and
+# a different name would create a second CronJob alongside the existing one
+# instead of adopting it.
+#
+# The image was 0.35.1 until 2026-08-15, which is why this job kept reporting
+# cluster=godfather2 / namespace=monitoring while every other check had moved
+# to its own --cluster-name: beekeeper only began pushing its own cluster and
+# namespace labels in 0.36.0. Pinning tag to {{ beekeeper_tag }} keeps it on
+# the same version as the rest of the fleet from now on.
+config:
+  command: ['beekeeper', 'check', '--cluster-name=dev-bee-gateway', '--checks=mainnet-dev-sla-smoke', '--create-cluster=false', '--metrics-pusher-address=pushgateway-prometheus-pushgateway.monitoring.svc.{{ cluster_id }}.local:9091', '--timeout=720h', '--in-cluster=true']
+  # environment variables
+  CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
+  CONFIG_GIT_BRANCH: master
+  CONFIG_GIT_DIR: 'config'
+  GETH_URL: http://rpc-gnosis-haproxy.default.svc.{{ cluster_id }}.local
+  # cron job - fires every minute, but concurrencyPolicy Forbid plus the 720h
+  # timeout means this is really "keep exactly one instance alive, restart
+  # within a minute if it dies". Same pattern as availability-sla and
+  # network-sla. Do not read the schedule as a run cadence.
+  schedule: '* * * * *'
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3

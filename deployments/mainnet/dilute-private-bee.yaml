@@ -9,8 +9,46 @@ serviceAccount:
   createRole: true
   createClusterRole: true
 
+# Dilutes the bee-private postage batch when it approaches capacity.
+#
+# FIXED 2026-08-16: this file is named dilute-private-bee but ran
+#   beekeeper stamper topup --namespace=bee --batch-ids=e36969ec...
+# i.e. a second copy of topup-private-bee.yaml with the subcommand left as
+# `topup` and --ttl-threshold dropped. Net effect: bee-private had TWO topup
+# jobs and NO dilute job, so batch utilisation was never being watched at all.
+#
+# topup and dilute guard different failure modes and are not interchangeable:
+#   topup  - batch runs out of TIME     (--ttl-threshold / --topup-to)
+#   dilute - batch runs out of SPACE    (--usage-threshold / --dilution-depth)
+# Utilisation on e36969ec was 18% on 2026-08-16 (depth 21, TTL 23.4 d), so
+# nothing was lost while this was broken - but the space guard did not exist.
+#
+# --label-selector is explicit on purpose. With --namespace, beekeeper defaults
+# it to beekeeper.ethswarm.org/node-funder=true, and NO pod in the bee namespace
+# carries that label - bee-private-0 has app.kubernetes.io/instance=bee-private
+# and role=bee. Relying on the default risks the job matching nothing and
+# reporting success, which is how these guardrails fail silently. The batch
+# lives on bee-private-0, so select exactly that StatefulSet.
+#
+# Semantics (beekeeper stamper dilute --help, 0.36.0):
+#   --usage-threshold  dilute once utilisation exceeds this percent (default 90)
+#   --dilution-depth   levels to add to the depth each time        (default 1)
+# Note dilution keeps the batch amount and spreads it over twice the chunks per
+# level, so each dilution HALVES the remaining TTL. topup-private-bee.yaml is
+# what restores it afterwards; the two jobs are meant to work as a pair.
 config:
-  command: ['beekeeper', 'stamper', 'topup', '--namespace=bee', '--batch-ids=e36969ecb200e0cc0b3503cf5f2ee1b39eb7d98a1849e16194f4d38395b2f28d' ]
+  command:
+    [
+      'beekeeper',
+      'stamper',
+      'dilute',
+      '--namespace=bee',
+      '--in-cluster=true',
+      '--label-selector=app.kubernetes.io/instance=bee-private',
+      '--batch-ids=e36969ecb200e0cc0b3503cf5f2ee1b39eb7d98a1849e16194f4d38395b2f28d',
+      '--usage-threshold=90',
+      '--dilution-depth=1',
+    ]
   # environment variables
   CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
   CONFIG_GIT_BRANCH: master
