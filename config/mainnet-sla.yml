@@ -80,9 +80,46 @@ checks:
     type: smoke
   sla-availability:
     options:
+      # Reference files this check downloads every next-iter-wait to prove the
+      # network still serves previously-stored content.
+      #
+      # 2026-08-16: the first two refs were replaced. The originals
+      #   2e70bb26d5b1f6f4a0961c42bb62e1066334a456c8835fb7ba34077b9d36859b
+      #   d5fc0a2753360ddfb1825fb2d979031d4b620ddabd3e0aea69b685109ee357fe
+      # had been failing EVERY iteration with "hashing copy: unexpected EOF" -
+      # the root chunk still resolved but the payload chunks were gone. It was
+      # not a node fault: each iteration failed on a different bee-sla node.
+      # The error counter shows this had been true since at least 2026-05-17,
+      # unnoticed because the Long availability dashboard did not render and
+      # nothing alerts on beekeeper_check_longavailability_d_download_status.
+      #
+      # ROOT CAUSE: the content was stamped with batches whose TTL is measured
+      # in days (the batches on bee-sla-2-0 ranged 0.2 - 6.7 days on 2026-08-16).
+      # A long-availability test on week-long postage will always rot. Replacing
+      # refs without fixing postage just restarts the clock - see
+      # deployments/mainnet/topup-sla-availability.yaml, which keeps the batch
+      # below alive. Do not add refs stamped on a short-lived batch.
+      #
+      # Batch: 5e7cad242a1727f077fbef534efdd73b3577b876fcb1131284eb5d7b9537e4df
+      #        depth 20, immutable, label sla-availability, created 2026-08-16.
+      #        Bought at depth 17 and diluted to 20: bucketDepth is 16, so depth
+      #        17 gives only 2 chunk slots per bucket and overissues at ~3k
+      #        chunks. Depth 20 (16 slots) is the practical minimum here.
+      #
+      # Both replacements are 158,637,636 bytes, matching the surviving ref so
+      # throughput stays comparable. Content is reproducible without storing it:
+      #   openssl enc -aes-256-ctr -pass pass:"<seed>" -nosalt -in /dev/zero \
+      #     | head -c 158637636
+      #   a61d5acf... seed "sla-availability-ref-a-2026-08-16"
+      #               sha256 9a8e073f2ce01a01b597321c0c4f909688f5bdf207203b27876118b77c19a1db
+      #   e65a8074... seed "sla-availability-ref-b-2026-08-16"
+      #               sha256 533e4ff956ea5e77bbe37ca283453bdd5b049449f3c85bc33bb23433869794b9
+      # Both verified downloading in full, with matching checksums, from
+      # bee-sla-4-0 and bee-sla-2-0 (uploader was bee-sla-1-0) before this commit.
       refs:
-        - "2e70bb26d5b1f6f4a0961c42bb62e1066334a456c8835fb7ba34077b9d36859b"
-        - "d5fc0a2753360ddfb1825fb2d979031d4b620ddabd3e0aea69b685109ee357fe"
+        - "a61d5acf669446701861f63a5b668920a73967cf88608a466f12068c684b25f7"
+        - "e65a807476fe2756cc212eba4c26c7e3e95aa7cea99e4527cce7086eb138accd"
+        # Original third ref - still healthy, kept for continuity of history.
         - "1cfd24178c67b708694b4ce4235d32e2a39d42813d2b09d1ef77eaa4c954931f"
       retry-wait: 1m
       retry-count: 3

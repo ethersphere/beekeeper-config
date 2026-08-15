@@ -1,7 +1,14 @@
 image:
   repository: ethersphere/beekeeper
-  tag: latest
-  pullPolicy: Always
+  # PINNED. This said `tag: latest` with `pullPolicy: Always`, while the running
+  # CronJob on swarm1 was on 0.35.0 - "latest" as it stood whenever it was last
+  # deployed. Leaving it mutable means the next reconcile silently jumps
+  # versions, and a beekeeper 0.35 -> 0.36 jump is not cosmetic: 0.36 pushes its
+  # own `cluster` and `namespace` labels to the pushgateway, so every metric
+  # this check emits changes identity and the old series stop dead. Upgrade
+  # deliberately, in its own commit, not as a side effect of an unrelated apply.
+  tag: "0.35.0"
+  pullPolicy: IfNotPresent
 
 imagePullSecrets: []
 nameOverride: "beekeeper-load"
@@ -30,24 +37,53 @@ resources: {}
 
 nodeSelector: {}
 
+# RECONCILED TO LIVE 2026-08-16. This file had drifted badly from the CronJob
+# actually running as beekeeper-load-cronjob in swarm1/beekeeper, and applying
+# it as written would have broken the check:
+#
+#   field              was committed                   live (now captured here)
+#   --checks           testnet-smoke  <-- UNDEFINED     pt-testnet-load
+#   --config-git-repo  ethersphere/beekeeper-config     ethersphere/beekeeper
+#   schedule           * * * * *                        */15 * * * *
+#   --create-cluster   (absent)                         false
+#   image tag          latest / Always                  0.35.0
+#   --geth-url         passed as a command flag         set via GETH_URL env
+#   --log-verbosity    debug                            (absent)
+#   --metrics-enabled  true                             (absent)
+#
+# `testnet-smoke` is not a defined check at all - config/bee-testnet.yaml
+# defines pt-smoke, pt-testnet-load, pt-pingpong, pt-retrieval, pt-manifest,
+# pt-pss, pt-soc, pt-pushsync-chunks, pt-postage, pt-gsoc, pt-feed,
+# pt-feed-availability, pt-redundancy and pt-settlements, and nothing named
+# testnet-smoke. Whoever last fixed this fixed it on the cluster and never
+# brought it back here.
+#
+# Live is treated as the source of truth: this is a record of what runs, not a
+# redesign. Two things are deliberately captured rather than endorsed, and are
+# worth a separate decision:
+#   1. --config-git-repo points at ethersphere/beekeeper, NOT this repo. For
+#      this check, beekeeper-config is not the source of truth for cluster and
+#      check definitions.
+#   2. backoffLimit was 1 here and unset on the live Job (so the Kubernetes
+#      default of 6 applies). Left at 1 rather than guessing - flag if the
+#      difference matters.
 config:
   command:
     [
       "beekeeper",
       "check",
-      "--in-cluster=true",
       "--cluster-name=bee-testnet",
-      "--checks=testnet-smoke",
+      "--checks=pt-testnet-load",
+      "--create-cluster=false",
+      "--metrics-pusher-address=pushgateway-prometheus-pushgateway.monitoring.svc.swarm1.local:9091",
       "--timeout=13h",
-      "--log-verbosity=debug",
-      "--config-git-repo=https://github.com/ethersphere/beekeeper-config",
+      "--in-cluster=true",
+      "--config-git-repo=https://github.com/ethersphere/beekeeper",
       "--config-git-dir=config",
       "--config-git-branch=master",
-      "--metrics-enabled=true",
-      "--metrics-pusher-address=pushgateway-prometheus-pushgateway.monitoring.svc.swarm1.local:9091",
-      "--geth-url=http://rpc-sepolia-haproxy.default.svc.swarm1.local",
     ]
   # environment variables
+  GETH_URL: "http://rpc-sepolia-haproxy.default.svc.swarm1.local"
   BZZ_TOKEN_ADDRESS: "0x6aab14fe9cccd64a502d23842d916eb5321c26e7"
   ETH_ACCOUNT: "0x62cab2b3b55f341f10348720ca18063cdb779ad5"
   # if singleRun is enabled cron job settings will be omitted
@@ -55,7 +91,7 @@ config:
   singleRun: false
   backoffLimit: 1
   # cron job
-  schedule: "* * * * *"
+  schedule: "*/15 * * * *"
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
   concurrencyPolicy: Forbid

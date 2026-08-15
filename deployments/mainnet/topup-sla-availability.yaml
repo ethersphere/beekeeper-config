@@ -1,0 +1,64 @@
+image:
+  pullPolicy: IfNotPresent
+  tag: "{{ beekeeper_tag }}"
+
+serviceAccount:
+  ## Specifies whether a service account should be created
+  create: true
+  ## create role or/and cluster role for the service account
+  createRole: true
+  createClusterRole: true
+
+# Keeps the sla-availability postage batch alive.
+#
+# WHY THIS EXISTS: on 2026-08-16 two of the three sla-availability reference
+# files were found to be permanently unretrievable ("hashing copy: unexpected
+# EOF"), and had been since at least 2026-05-17. The cause was postage, not the
+# network: every batch on the bee-sla nodes had a TTL between 0.2 and 6.7 days.
+# A check whose whole purpose is long-term availability cannot be stamped on
+# week-long postage. Replacing the files without this cronjob just restarts the
+# same clock.
+#
+# The batch below is depth 20, immutable, and was created with only ~22.5 days
+# of TTL on purpose - keeping it alive is this job's responsibility rather than
+# a large up-front purchase, because a big TTL bought once still expires
+# silently and the chain price can move.
+#
+# --label-selector IS REQUIRED AND IS NOT THE DEFAULT.
+# With --namespace, beekeeper defaults the selector to
+#   beekeeper.ethswarm.org/node-funder=true
+# and NO bee-sla pod carries that label (they use role=sla-bee). Left at the
+# default this job matches zero nodes, finds no stamper to talk to, and reports
+# success while doing nothing - the same silent-guardrail failure that let the
+# refs rot in the first place. node-funder-sla.yaml passes the same selector.
+#
+# Semantics (beekeeper stamper topup --help, 0.36.0):
+#   --ttl-threshold  act when remaining TTL drops below this   (default 120h)
+#   --topup-to       extend TTL up to this                     (default 720h)
+# 240h/720h means: once the batch falls under 10 days, extend it back to 30.
+# At depth 20 that buys ~20 days for roughly 2.6 BZZ per top-up, funded from
+# the bee-sla node wallet (54.7 BZZ on 2026-08-16, refilled by node-funder-sla).
+# Do not raise --topup-to without checking that balance: topping up to 90 days
+# would cost ~10 BZZ a time.
+config:
+  command:
+    [
+      'beekeeper',
+      'stamper',
+      'topup',
+      '--namespace=bee-sla',
+      '--in-cluster=true',
+      '--label-selector=role=sla-bee',
+      '--batch-ids=5e7cad242a1727f077fbef534efdd73b3577b876fcb1131284eb5d7b9537e4df',
+      '--ttl-threshold=240h0m0s',
+      '--topup-to=720h0m0s',
+    ]
+  # environment variables
+  CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
+  CONFIG_GIT_BRANCH: master
+  GETH_URL: http://rpc-gnosis-haproxy.default.svc.{{ cluster_id }}.local
+  # cron job - every 12h, matching the other stamper jobs. The threshold is
+  # 10 days, so a missed run or two cannot cause an expiry.
+  schedule: '0 */12 * * *'
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
