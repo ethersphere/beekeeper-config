@@ -1,13 +1,20 @@
 image:
   repository: ethersphere/beekeeper
-  tag: latest
-  pullPolicy: Always
-
+  # Deliberately {{ beekeeper_tag }} (resolves to the newest upstream tag at deploy
+  # time, v0.36.0 as of 2026-08-16), matching every mainnet deployment.
+  #
+  # 0.36 is REQUIRED, not cosmetic: beekeeper only started pushing its own
+  # `cluster` and `namespace` labels in 0.36.0. On 0.35.x the --cluster-name flag
+  # has no effect on metrics at all - Prometheus's external label shows through
+  # instead, which is why these testnet checks reported cluster=swarm1 and why the
+  # testnet-public / testnet-light rename was invisible for them.
+  tag: "{{ beekeeper_tag }}"
+  pullPolicy: IfNotPresent
 imagePullSecrets: []
 additionalPodLabels:
   log-collect: "true"
-nameOverride: "beekeeper-checks"
-fullnameOverride: "beekeeper-checks"
+nameOverride: "beekeeper-light-testnet-checks"
+fullnameOverride: "beekeeper-light-testnet-checks"
 
 serviceAccount:
   ## Specifies whether a service account should be created
@@ -38,7 +45,8 @@ config:
       "beekeeper",
       "check",
       "--in-cluster=true",
-      "--cluster-name=testnet-public",
+      "--cluster-name=testnet-light",
+      "--create-cluster=false",
       "--checks=pt-pingpong,pt-pushsync-chunks,pt-manifest,pt-feed,pt-gsoc,pt-pss,pt-redundancy,pt-retrieval,pt-soc",
       "--timeout=12h",
       "--log-verbosity=debug",
@@ -57,7 +65,7 @@ config:
   singleRun: false
   backoffLimit: 1
   # cron job
-  schedule: "30 */4 * * *" # every 4 hours at 30th minute
+  schedule: "30 */4 * * *"
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 5
   concurrencyPolicy: Forbid
