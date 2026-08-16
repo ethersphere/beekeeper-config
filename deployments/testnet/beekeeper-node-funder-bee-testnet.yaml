@@ -1,0 +1,112 @@
+image:
+  repository: ethersphere/beekeeper
+  # {{ beekeeper_tag }} like every other deployment (v0.36.0 as of 2026-08-16).
+  # Was `latest` with pullPolicy Always while the live CronJob ran 0.35.0.
+  # Every flag this job uses - --label-selector, --namespace, --min-swarm,
+  # --min-native, --wallet-key - was checked against `beekeeper node-funder
+  # --help` on 0.36.0 before the bump, because this job moves funds.
+  tag: "{{ beekeeper_tag }}"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+# MUST stay beekeeper-node-funder-bee-testnet. The live CronJob is
+# beekeeper-node-funder-bee-testnet-cronjob and the chart appends "-cronjob" to
+# the fullname, so the previous value ("beekeeper-node-funder") would have made
+# helm create a SECOND CronJob next to the running one instead of adopting it.
+# The file basename must also stay as-is: beekeeper.yml derives the Helm release
+# name from it, and the existing release is beekeeper-node-funder-bee-testnet.
+nameOverride: "beekeeper-node-funder-bee-testnet"
+fullnameOverride: "beekeeper-node-funder-bee-testnet"
+
+serviceAccount:
+  ## Specifies whether a service account should be created
+  create: true
+  ## Name of the service account to use
+  ## if not set and create is true, a name is generated using the fullname template
+  name:
+  ## create role or/and cluster role for the service account
+  createRole: true
+  createClusterRole: true
+
+## Define resource requests and limits to allocate CPU and memory effectively.
+## Example:
+# resources:
+#   limits:
+#     cpu: "1"        # Maximum CPU usage (e.g., 1 core)
+#     memory: "1Gi"   # Maximum memory usage (e.g., 1 GiB)
+#   requests:
+#     cpu: "100m"     # Minimum guaranteed CPU usage (e.g., 100 millicores)
+#     memory: "128Mi" # Minimum guaranteed memory usage (e.g., 128 MiB)
+resources: {}
+
+nodeSelector: {}
+
+# RECONCILED TO LIVE 2026-08-16, then moved here from deployments/node-funder/
+# so it is actually deployed (beekeeper.yml only applies /mainnet/ and /testnet/).
+#
+# The committed version had diverged so far that applying it would have changed
+# what this job does, not just where it is defined:
+#
+#   field            was committed                        live (captured here)
+#   targeting        --cluster-name=bee-testnet           --namespace=bee-testnet
+#                                                         + --label-selector
+#   schedule         * * * * *                            4 5 * * *
+#   --periodic-check 12h                                  (absent)
+#   --timeout        0                                    (absent)
+#   --geth-url       passed as a command flag             set via GETH_URL env
+#   --log-verbosity  debug                                (absent)
+#   --metrics-enabled false                               (absent)
+#   fullnameOverride beekeeper-node-funder                beekeeper-node-funder-bee-testnet
+#   ETH_ACCOUNT      {{ beekeeper_eth_address }}          literal address
+#   failedJobsHistoryLimit 3                              1
+#
+# Two of those were outright broken. `beekeeper_eth_address` is defined NOWHERE
+# in the ansible repo, so the template could never have rendered - every sibling
+# manifest uses the literal address, which is what the live job has. And the
+# fullnameOverride mismatch would have produced a duplicate CronJob.
+#
+# Targeting note: --namespace overrides --cluster-name in beekeeper, so this job
+# is unaffected by the bee-testnet -> testnet-public cluster rename. The
+# bee-testnet here is a KUBERNETES NAMESPACE and must not be renamed.
+#
+# The wallet key stays templated - {{ beekeeper_eth_private_key }} comes from
+# Bitwarden via beekeeper.yml. Note the rendered CronJob spec therefore contains
+# the key in plaintext, readable by anyone with `get cronjob` in this namespace.
+# The mainnet node-funders moved to a Secret + BEEKEEPER_WALLET_KEY in 0eaf256;
+# this one has not, and doing so is a separate change.
+config:
+  command:
+    [
+      "beekeeper",
+      "node-funder",
+      "--label-selector=app.kubernetes.io/name=bee",
+      "--namespace=bee-testnet",
+      "--min-swarm=10",
+      "--min-native=0.1",
+      "--wallet-key={{ beekeeper_eth_private_key }}",
+      "--config-git-repo=https://github.com/ethersphere/beekeeper-config.git",
+      "--config-git-dir=config",
+      "--config-git-branch=master",
+    ]
+  # environment variables
+  GETH_URL: "http://rpc-sepolia-haproxy.default.svc.swarm1.local"
+  BZZ_TOKEN_ADDRESS: "0x6aab14fe9cccd64a502d23842d916eb5321c26e7"
+  ETH_ACCOUNT: "0x62cab2b3b55f341f10348720ca18063cdb779ad5"
+  # if singleRun is enabled cron job settings will be omitted
+  # job
+  singleRun: false
+  # Live has backoffLimit unset (so the Kubernetes default of 6 applies). Kept
+  # at 1 rather than dropped, matching beekeeper-load.yaml - flag if it matters.
+  backoffLimit: 1
+  # cron job - once a day, as live. NOT '* * * * *': this funds nodes, and the
+  # every-minute schedule in the old committed file paired with --periodic-check
+  # would have turned a daily top-up into a permanently running funder.
+  schedule: "4 5 * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Forbid
+  # if it is enabled it will create init container that will wait
+  # for cluster to be up and operational
+  initPing:
+    enabled: false
+    clusterName: ""
