@@ -36,7 +36,7 @@ config:
       "beekeeper",
       "node-funder",
       "--in-cluster=true",
-      "--cluster-name=bee-testnet",
+      "--cluster-name=testnet-public",
       "--periodic-check=12h",
       "--timeout=0",
       "--geth-url=http://rpc-sepolia-haproxy.default.svc.swarm1.local",

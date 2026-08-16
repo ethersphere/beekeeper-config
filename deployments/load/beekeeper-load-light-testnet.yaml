@@ -36,7 +36,7 @@ config:
       "beekeeper",
       "check",
       "--in-cluster=true",
-      "--cluster-name=bee-light-testnet",
+      "--cluster-name=testnet-light",
       "--checks=pt-testnet-load",
       "--timeout=13h",
       "--log-verbosity=debug",

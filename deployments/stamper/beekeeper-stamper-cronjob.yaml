@@ -37,7 +37,7 @@ config:
       "stamper",
       "set",
       "--in-cluster=true",
-      "--cluster-name=bee-testnet",
+      "--cluster-name=testnet-public",
       "--topup-to=336h",
       "--ttl-threshold=120h",
       "--usage-threshold=90",

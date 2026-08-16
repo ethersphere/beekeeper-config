@@ -1,7 +1,7 @@
 in-cluster: true
 
 clusters:
-  bee-light-testnet:
+  testnet-light:
     _inherit: ""
     name: bee
     namespace: bee-light-testnet

@@ -14,7 +14,7 @@ config:
     [
       "beekeeper",
       "check",
-      "--cluster-name=bee-testnet",
+      "--cluster-name=testnet-public",
       "--checks=pt-smoke",
       "--create-cluster=false",
       "--metrics-pusher-address=pushgateway-prometheus-pushgateway.monitoring.svc.{{ cluster_id }}.local:9091",

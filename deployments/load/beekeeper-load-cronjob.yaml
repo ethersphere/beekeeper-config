@@ -104,7 +104,7 @@ config:
     [
       "beekeeper",
       "check",
-      "--cluster-name=bee-testnet",
+      "--cluster-name=testnet-public",
       "--checks=pt-testnet-load",
       "--create-cluster=false",
       "--metrics-pusher-address=pushgateway-prometheus-pushgateway.monitoring.svc.swarm1.local:9091",
