@@ -1,7 +1,7 @@
 in-cluster: true
 
 clusters:
-  bee-playground:
+  testnet-playground:
     _inherit: ""
     name: bee
     namespace: bee-playground

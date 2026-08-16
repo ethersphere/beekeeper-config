@@ -30,7 +30,7 @@ serviceAccount:
 # namespace labels in 0.36.0. Pinning tag to {{ beekeeper_tag }} keeps it on
 # the same version as the rest of the fleet from now on.
 config:
-  command: ['beekeeper', 'check', '--cluster-name=dev-bee-gateway', '--checks=mainnet-dev-sla-smoke', '--create-cluster=false', '--metrics-pusher-address=pushgateway-prometheus-pushgateway.monitoring.svc.{{ cluster_id }}.local:9091', '--timeout=720h', '--in-cluster=true']
+  command: ['beekeeper', 'check', '--cluster-name=mainnet-gateway', '--checks=mainnet-dev-sla-smoke', '--create-cluster=false', '--metrics-pusher-address=pushgateway-prometheus-pushgateway.monitoring.svc.{{ cluster_id }}.local:9091', '--timeout=720h', '--in-cluster=true']
   # environment variables
   CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
   CONFIG_GIT_BRANCH: master

@@ -1,5 +1,5 @@
 clusters:
-  mainnet-dev-bee-cheq:
+  mainnet-perf-cheq:
     _inherit: ""
     name: bee
     namespace: dev-bee-perf
@@ -14,43 +14,43 @@ clusters:
     node-groups:
       cheq-1-bee:
         mode: node
-        bee-config: mainnet-dev-bee-cheq
-        config: mainnet-dev-bee-cheq
+        bee-config: mainnet-perf-cheq
+        config: mainnet-perf-cheq
         count: 1
       cheq-2-bee:
         mode: node
-        bee-config: mainnet-dev-bee-cheq
-        config: mainnet-dev-bee-cheq
+        bee-config: mainnet-perf-cheq
+        config: mainnet-perf-cheq
         count: 1
       cheq-3-bee:
         mode: node
-        bee-config: mainnet-dev-bee-nocheq
-        config: mainnet-dev-bee-nocheq
+        bee-config: mainnet-perf-cheq-nocheq
+        config: mainnet-perf-cheq-nocheq
         count: 1
       cheq-4-bee:
         mode: node
-        bee-config: mainnet-dev-bee-nocheq
-        config: mainnet-dev-bee-nocheq
+        bee-config: mainnet-perf-cheq-nocheq
+        config: mainnet-perf-cheq-nocheq
         count: 1
 
 # node-groups defines node groups that can be registered in the cluster
 # node-groups may inherit it's configuration from already defined node-group and override specific fields from it
 node-groups:
-  mainnet-dev-bee-cheq:
+  mainnet-perf-cheq:
     _inherit: "default"
     persistence-enabled: true
-  mainnet-dev-bee-nocheq:
+  mainnet-perf-cheq-nocheq:
     _inherit: "default"
     persistence-enabled: true
 
 # bee-configs defines Bee configuration that can be assigned to node-groups
 # bee-configs may inherit it's configuration from already defined bee-config and override specific fields from it
 bee-configs:
-  mainnet-dev-bee-cheq:
+  mainnet-perf-cheq:
     _inherit: "default"
     bootnode: ["/dnsaddr/mainnet.ethswarm.org"]
     chequebook-enable: true
-  mainnet-dev-bee-nocheq:
+  mainnet-perf-cheq-nocheq:
     _inherit: "default"
     bootnode: ["/dnsaddr/mainnet.ethswarm.org"]
     chequebook-enable: false
