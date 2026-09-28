@@ -1,0 +1,61 @@
+image:
+  pullPolicy: IfNotPresent
+  tag: "{{ beekeeper_tag }}"
+
+serviceAccount:
+  ## Specifies whether a service account should be created
+  create: true
+  ## create role or/and cluster role for the service account
+  createRole: true
+  createClusterRole: true
+
+# Keeps the swarm-oci-registry release batch alive: the mutable batch labelled
+# `bee-releases` (depth 21) on bee-oci (godfather2, namespace bee). Every bee
+# release published to mainnet Swarm by CI is stamped with it; if it expires,
+# the releases can disappear from the network.
+#
+# Targeting:
+#   --postage-labels=bee-releases  selects the batch by label, so this file
+#     needs no batch id and also covers a replacement batch with the same label.
+#   --label-selector is REQUIRED and narrow. With --namespace the default is
+#     beekeeper.ethswarm.org/node-funder=true, which bee-oci must not carry.
+#     In-cluster, beekeeper 0.36 lists Services (port "api", with a ClusterIP),
+#     not pods; app.kubernetes.io/instance=bee-oci alone matches bee-oci AND
+#     bee-oci-0, i.e. the same node twice. Nodes are processed one after the
+#     other, and Bee only sees a top-up once its chain listener catches up, so
+#     the second pass would likely still see the old TTL and top up again
+#     (double spend). endpoint=api is only on the per-pod Service bee-oci-0.
+#
+# Semantics (beekeeper stamper topup --help, 0.36.0):
+#   --ttl-threshold  act when remaining TTL drops below this   (default 120h)
+#   --topup-to       extend TTL up to this                     (default 720h)
+# 240h/720h: once under 10 days, extend back to 30. At depth 21 and price
+# 124252 that is ~9 xBZZ per top-up (~0.45 xBZZ/day), paid from the bee-oci
+# wallet, which node-funder-bee-oci.yaml keeps at >= 25 xBZZ.
+#
+# Beekeeper skips batches that are not usable or have utilization 0, so this
+# does nothing between the purchase and the first upload ("topup postage batch
+# on 0 nodes"). After the first mirror-bee run, check that a run logs
+# "found 1 nodes".
+config:
+  command:
+    [
+      'beekeeper',
+      'stamper',
+      'topup',
+      '--namespace=bee',
+      '--in-cluster=true',
+      '--label-selector=app.kubernetes.io/instance=bee-oci,endpoint=api',
+      '--postage-labels=bee-releases',
+      '--ttl-threshold=240h0m0s',
+      '--topup-to=720h0m0s',
+    ]
+  # environment variables
+  CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
+  CONFIG_GIT_BRANCH: master
+  GETH_URL: http://rpc-gnosis-haproxy.default.svc.{{ cluster_id }}.local
+  # cron job - every 12h at :40. With a 10-day threshold a missed run or two
+  # cannot cause an expiry.
+  schedule: '40 */12 * * *'
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3

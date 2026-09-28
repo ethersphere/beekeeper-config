@@ -1,0 +1,66 @@
+image:
+  pullPolicy: IfNotPresent
+  tag: "{{ beekeeper_tag }}"
+
+serviceAccount:
+  ## Specifies whether a service account should be created
+  create: true
+  ## create role or/and cluster role for the service account
+  createRole: true
+  createClusterRole: true
+
+## The funding wallet key is injected from a Secret rather than passed on the
+## command line: anything in config.command is stored verbatim in the CronJob
+## spec and is readable by anyone who can read that object in the namespace.
+## Beekeeper reads --wallet-key from BEEKEEPER_WALLET_KEY (viper, prefix
+## "beekeeper", dashes replaced by underscores). Requires chart >= 0.4.14.
+extraEnv:
+  - name: BEEKEEPER_WALLET_KEY
+    valueFrom:
+      secretKeyRef:
+        name: beekeeper-wallet-key
+        key: walletKey
+
+# Keeps the wallet of bee-oci (godfather2, namespace bee) funded. bee-oci is
+# the swarm-oci-registry uploader: CI publishes bee releases through it, and it
+# owns the mutable release batch labelled `bee-releases`, which
+# topup-bee-oci.yaml tops up from this same wallet.
+#
+# --label-selector is explicit and narrow on purpose.
+#   - In-cluster, beekeeper 0.36 lists SERVICES (not pods) matching the
+#     selector, keeping those with a port named "api" and a ClusterIP.
+#   - app.kubernetes.io/instance=bee-oci alone matches TWO such Services for
+#     one pod (bee-oci and bee-oci-0), so the node is processed twice per run.
+#     Harmless for funding, but see topup-bee-oci.yaml. endpoint=api exists
+#     only on the per-pod Service, so this selector matches exactly bee-oci-0.
+#   - The default (beekeeper.ethswarm.org/node-funder=true) must never be put
+#     on bee-oci: topup-private-bee.yaml relies on it in this namespace.
+#
+# Amounts: the first batch purchase (depth 21, ~30 d) costs ~13.5 xBZZ at
+# price 124252; a top-up from 10 d back to 30 d costs ~9 xBZZ. 25 xBZZ covers
+# the purchase plus one top-up, and one top-up at twice today's price.
+# xDAI only pays gas (chequebook deploy, top-up transactions).
+#
+# Bootstrap: until its chequebook is deployed bee-oci is not Ready, so its
+# Service has no endpoints and this job cannot reach it. Fund the first xDAI
+# by hand (address in `kubectl -n bee logs bee-oci-0`, "cannot continue until
+# ... available on address"); from then on this job keeps it topped up.
+config:
+  command:
+    [
+      'beekeeper',
+      'node-funder',
+      '--namespace=bee',
+      '--label-selector=app.kubernetes.io/instance=bee-oci,endpoint=api',
+      '--min-swarm=25',
+      '--min-native=1',
+    ]
+  # environment variables
+  CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
+  CONFIG_GIT_BRANCH: master
+  GETH_URL: http://rpc-gnosis-haproxy.default.svc.{{ cluster_id }}.local
+  # cron job - every 12h at :20, 20 minutes before topup-bee-oci, so a top-up
+  # normally finds a refilled wallet.
+  schedule: '20 */12 * * *'
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
