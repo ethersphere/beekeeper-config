@@ -1,0 +1,68 @@
+clusters:
+  mainnet-storage:
+    _inherit: ""
+    name: bee
+    namespace: dev-bee-storage
+    disable-namespace: true
+    api-domain-internal: dev-bee-storage.svc.godfather2.local:1633
+    api-insecure-tls: true
+    api-scheme: http
+    funding:
+      eth: 0.1
+      gbzz: 2.0
+    node-groups:
+      bee-1:
+        mode: node
+        bee-config: mainnet-storage
+        config: mainnet-storage
+        count: 1
+      bee-2:
+        mode: node
+        bee-config: mainnet-storage
+        config: mainnet-storage
+        count: 1
+      bee-3:
+        mode: node
+        bee-config: mainnet-storage
+        config: mainnet-storage
+        count: 1
+      bee-4:
+        mode: node
+        bee-config: mainnet-storage
+        config: mainnet-storage
+        count: 1
+
+# node-groups defines node groups that can be registered in the cluster
+# node-groups may inherit it's configuration from already defined node-group and override specific fields from it
+node-groups:
+  mainnet-storage:
+    _inherit: "default"
+    persistence-enabled: true
+
+# bee-configs defines Bee configuration that can be assigned to node-groups
+# bee-configs may inherit it's configuration from already defined bee-config and override specific fields from it
+bee-configs:
+  mainnet-storage:
+    _inherit: "default"
+    bootnode: ["/dnsaddr/mainnet.ethswarm.org"]
+
+# checks defines checks Beekeeper can execute against the cluster
+# type filed allows defining same check with different names and options
+checks:
+  mainnet-storage-smoke:
+    options:
+      # 1h under the 12h cron period so the run always finishes before the next
+      # trigger; with concurrencyPolicy Forbid an overrun skips a whole cycle.
+      # Same convention as sla-smoke.
+      duration: 11h
+      content-size: 50000000
+      postage-ttl: 48h
+      postage-depth: 20
+      upload-groups:
+        - bee-1
+        - bee-3
+      download-groups:
+        - bee-2
+        - bee-4
+    timeout: 720h
+    type: smoke
