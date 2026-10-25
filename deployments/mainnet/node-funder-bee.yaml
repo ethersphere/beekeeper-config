@@ -22,7 +22,7 @@ extraEnv:
         key: walletKey
 
 config:
-  command: ['beekeeper', 'node-funder', '--namespace=bee', '--label-selector=role=gateway-bee', '--min-swarm=50', '--min-native=1']
+  command: ['beekeeper', 'node-funder', '--namespace=bee', '--label-selector=role=gateway-bee,endpoint=api', '--min-swarm=50', '--min-native=1']
   # environment variables
   CONFIG_GIT_REPO: 'https://github.com/ethersphere/beekeeper-config.git'
   CONFIG_GIT_BRANCH: master
