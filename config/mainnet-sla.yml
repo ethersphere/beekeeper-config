@@ -130,14 +130,16 @@ checks:
       #               sha256 9a8e073f2ce01a01b597321c0c4f909688f5bdf207203b27876118b77c19a1db
       #   b805787d... seed "sla-availability-ref-b-2026-08-16"
       #               sha256 533e4ff956ea5e77bbe37ca283453bdd5b049449f3c85bc33bb23433869794b9
-      # Both verified with GET /bzz returning the full 158,637,636 bytes and
+      #   590a157e... seed "sla-availability-ref-c-2026-10-27"
+      #               sha256 3a1881a16b03a3c4bf8a896bf6b985b3b3212ab33a971c530ccea3dee941e182
+      #               (replaced 1cfd2417..., whose postage expired; isRetrievable:false)
+      # All verified with GET /bzz returning the full 158,637,636 bytes and
       # matching checksums from bee-sla-2-0, bee-sla-3-0 and bee-sla-4-0
       # (uploader was bee-sla-1-0) before this commit.
       refs:
         - "6071ff99b17ec29fcfd0d4032fda3b312bdc8be686300b910b378e2f8ef8583e"
         - "b805787dc4ce2ec85f1c59f3f949c007cd978bd62234d7f903462be26a1cdd1e"
-        # Original third ref - still healthy, kept for continuity of history.
-        - "1cfd24178c67b708694b4ce4235d32e2a39d42813d2b09d1ef77eaa4c954931f"
+        - "590a157ecbb14655c7eba4d2174ff1d48d73cfbd3f0a4f710c0c0befe7744ca7"
       retry-wait: 1m
       retry-count: 3
       next-iter-wait: 12h
